@@ -1,7 +1,7 @@
 # Проект «Большое путешествие»
 
 * Студент: [Артур Самойлов](https://up.htmlacademy.ru/ecmascript/16/user/235940).
-* Наставник: `Неизвестно`.
+* Наставник: [Виктор Кан](https://up.htmlacademy.ru/profession/react/8/ecmascript/user/241239).
 
 ---
 
