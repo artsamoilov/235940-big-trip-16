@@ -7,7 +7,6 @@ import {createTripInfo} from './view/trip-info-view.js';
 import {createTripEventsList} from './view/trip-events-list-view.js';
 import {createTripEvent} from './view/trip-event-view.js';
 import {createTripEventEditor} from './view/trip-event-editor-view.js';
-import {createTripStatistics} from './view/trip-statistics-view.js';
 
 const TRIP_EVENTS_COUNTER = 3;
 
@@ -30,4 +29,3 @@ for (let i = 0; i < TRIP_EVENTS_COUNTER; i++) {
 
 renderElement(tripEventsList, createTripEventEditor(), RenderPosition.AFTERBEGIN);
 renderElement(tripEventsContainer, createTripMessage(), RenderPosition.BEFOREEND);
-renderElement(tripEventsContainer, createTripStatistics(), RenderPosition.AFTEREND);
