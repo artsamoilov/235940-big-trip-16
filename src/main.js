@@ -1,3 +1,4 @@
+import {getTripPoint} from './mock/trip-point.js';
 import {renderElement, RenderPosition} from './utils/render.js';
 import {createTripTabs} from './view/trip-tabs-view.js';
 import {createTripFilters} from './view/trip-filters-view.js';
@@ -29,3 +30,5 @@ for (let i = 0; i < TRIP_EVENTS_COUNTER; i++) {
 
 renderElement(tripEventsList, createTripEventEditor(), RenderPosition.AFTERBEGIN);
 renderElement(tripEventsContainer, createTripMessage(), RenderPosition.BEFOREEND);
+
+console.log(getTripPoint());
