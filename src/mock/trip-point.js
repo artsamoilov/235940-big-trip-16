@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 const TRIP_POINT_TYPES = [
   'taxi',
   'bus',
@@ -45,6 +47,7 @@ const MAX_PHOTOS_COUNT = 10;
 const MAX_BASE_PRICE = 200;
 const MAX_OFFERS_COUNT = 5;
 const MAX_OFFER_PRICE = 100;
+const MAX_MINUTES_GAP = 1440;
 
 const getRandomInteger = (a = 0, b = 1) => {
   const lower = Math.ceil(Math.min(a, b));
@@ -67,6 +70,8 @@ const getOfferPrice = () => getRandomInteger(0, MAX_OFFER_PRICE);
 const getOffersCount = () => getRandomInteger(0, MAX_OFFERS_COUNT);
 
 const getPhotoCount = () => getRandomInteger(0, MAX_PHOTOS_COUNT - 1) + 1;
+
+const getDate = () => dayjs().add(getRandomInteger(-MAX_MINUTES_GAP, MAX_MINUTES_GAP), 'minute');
 
 const getPhotos = () => {
   const photoObjectsList = [];
@@ -103,10 +108,12 @@ const getOffers = (type) => {
 
 const getTripPoint = () => {
   const type = getTripPointType();
+  const firstDate = getDate();
+  const secondDate = getDate();
   return {
     basePrice: getBasePrice(),
-    dateFrom: '2019-07-10T22:55:56.845Z',
-    dateTo: '2019-07-11T11:22:13.375Z',
+    dateFrom: dayjs(Math.min(firstDate, secondDate)).toDate(),
+    dateTo: dayjs(Math.max(firstDate, secondDate)).toDate(),
     destination: getDestination(),
     isFavorite: Boolean(getRandomInteger()),
     offers: getOffers(type),
