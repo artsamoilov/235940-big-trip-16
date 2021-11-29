@@ -1,4 +1,4 @@
-import {getTripPoint} from './mock/trip-point.js';
+import {getTripEvent} from './mock/trip-event.js';
 import {renderElement, RenderPosition} from './utils/render.js';
 import {createTripTabs} from './view/trip-tabs-view.js';
 import {createTripFilters} from './view/trip-filters-view.js';
@@ -9,7 +9,9 @@ import {createTripEventsList} from './view/trip-events-list-view.js';
 import {createTripEvent} from './view/trip-event-view.js';
 import {createTripEventEditor} from './view/trip-event-editor-view.js';
 
-const TRIP_EVENTS_COUNTER = 3;
+const TRIP_EVENTS_COUNTER = 20;
+
+const tripEvents = Array.from({length: TRIP_EVENTS_COUNTER}, getTripEvent);
 
 const tripMainContainer = document.querySelector('.trip-main');
 const tripTabsContainer = document.querySelector('.trip-controls__navigation');
@@ -24,11 +26,9 @@ renderElement(tripEventsContainer, createTripEventsList(), RenderPosition.BEFORE
 
 const tripEventsList = tripEventsContainer.querySelector('.trip-events__list');
 
-for (let i = 0; i < TRIP_EVENTS_COUNTER; i++) {
-  renderElement(tripEventsList, createTripEvent(), RenderPosition.BEFOREEND);
+for (let i = 1; i < TRIP_EVENTS_COUNTER; i++) {
+  renderElement(tripEventsList, createTripEvent(tripEvents[i]), RenderPosition.BEFOREEND);
 }
 
 renderElement(tripEventsList, createTripEventEditor(), RenderPosition.AFTERBEGIN);
 renderElement(tripEventsContainer, createTripMessage(), RenderPosition.BEFOREEND);
-
-console.log(getTripPoint());

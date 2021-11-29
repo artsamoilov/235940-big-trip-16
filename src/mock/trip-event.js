@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-const TRIP_POINT_TYPES = [
+const TRIP_EVENT_TYPES = [
   'taxi',
   'bus',
   'train',
@@ -20,7 +20,7 @@ const TRIP_CITIES = [
   'Edinburgh',
 ];
 
-const TRIP_POINT_DESCRIPTIONS = [
+const TRIP_EVENT_DESCRIPTIONS = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   'Cras aliquet varius magna, non porta ligula feugiat eget.',
   'Fusce tristique felis at fermentum pharetra.',
@@ -55,11 +55,11 @@ const getRandomInteger = (a = 0, b = 1) => {
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
 
-const getDescription = () => TRIP_POINT_DESCRIPTIONS.sort(() => 0.5 - Math.random()).slice(0, getRandomInteger(0, MAX_DESCRIPTION_LENGTH - 1) + 1).join(' ');
+const getDescription = () => TRIP_EVENT_DESCRIPTIONS.sort(() => 0.5 - Math.random()).slice(0, getRandomInteger(0, MAX_DESCRIPTION_LENGTH - 1) + 1).join(' ');
 
 const getTripCity = () => TRIP_CITIES[getRandomInteger(0, TRIP_CITIES.length - 1)];
 
-const getTripPointType = () => TRIP_POINT_TYPES[getRandomInteger(0, TRIP_POINT_TYPES.length - 1)];
+const getTripEventType = () => TRIP_EVENT_TYPES[getRandomInteger(0, TRIP_EVENT_TYPES.length - 1)];
 
 const getOfferTitle = () => OFFER_TITLES[getRandomInteger(0, OFFER_TITLES.length - 1)];
 
@@ -106,8 +106,8 @@ const getOffers = (type) => {
   return {type, offers};
 };
 
-const getTripPoint = () => {
-  const type = getTripPointType();
+const getTripEvent = () => {
+  const type = getTripEventType();
   const firstDate = getDate();
   const secondDate = getDate();
   return {
@@ -121,4 +121,4 @@ const getTripPoint = () => {
   };
 };
 
-export {getTripPoint};
+export {getTripEvent};
