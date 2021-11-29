@@ -16,14 +16,16 @@ export const createTripEvent = ({basePrice, dateFrom, dateTo, destination, isFav
     if (offers.offers.length > 0) {
       const offersList = [];
       for (const offer of offers.offers) {
-        offersList.push(`<li class="event__offer">
-        <span class="event__offer-title">${offer.title}</span>
-        &plus;&euro;&nbsp;
-        <span class="event__offer-price">${offer.price}</span>
-      </li>`);
+        offersList.push(
+          `<li class="event__offer">
+            <span class="event__offer-title">${offer.title}</span>
+            &plus;&euro;&nbsp;
+            <span class="event__offer-price">${offer.price}</span>
+          </li>`);
       }
       return offersList.join('');
     }
+    return '';
   };
 
   return `<li class="trip-events__item">

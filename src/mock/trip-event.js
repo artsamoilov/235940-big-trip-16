@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-const TRIP_EVENT_TYPES = [
+export const TRIP_EVENT_TYPES = [
   'taxi',
   'bus',
   'train',
@@ -12,7 +12,7 @@ const TRIP_EVENT_TYPES = [
   'restaurant',
 ];
 
-const TRIP_CITIES = [
+export const TRIP_CITIES = [
   'Amsterdam',
   'Berlin',
   'Chamonix',
@@ -61,8 +61,6 @@ const getTripCity = () => TRIP_CITIES[getRandomInteger(0, TRIP_CITIES.length - 1
 
 const getTripEventType = () => TRIP_EVENT_TYPES[getRandomInteger(0, TRIP_EVENT_TYPES.length - 1)];
 
-const getOfferTitle = () => OFFER_TITLES[getRandomInteger(0, OFFER_TITLES.length - 1)];
-
 const getBasePrice = () => getRandomInteger(0, MAX_BASE_PRICE);
 
 const getOfferPrice = () => getRandomInteger(0, MAX_OFFER_PRICE);
@@ -91,22 +89,23 @@ const getDestination = () => ({
   pictures: getPhotos(),
 });
 
-const getSingleOffer = (id) => ({
+const getSingleOffer = (id, title) => ({
   id,
-  title: getOfferTitle(),
+  title,
   price: getOfferPrice(),
 });
 
 const getOffers = (type) => {
-  const offers = [];
   const offersCount = getOffersCount();
+  const offersTitles = OFFER_TITLES.sort(() => getRandomInteger(-1, 1)).slice(0, offersCount);
+  const offers = [];
   for (let i = 0; i < offersCount; i++) {
-    offers.push(getSingleOffer(i));
+    offers.push(getSingleOffer(i, offersTitles[i]));
   }
   return {type, offers};
 };
 
-const getTripEvent = () => {
+export const getTripEvent = () => {
   const type = getTripEventType();
   const firstDate = getDate();
   const secondDate = getDate();
@@ -120,5 +119,3 @@ const getTripEvent = () => {
     type,
   };
 };
-
-export {getTripEvent};

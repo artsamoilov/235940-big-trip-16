@@ -30,5 +30,5 @@ for (let i = 1; i < TRIP_EVENTS_COUNTER; i++) {
   renderElement(tripEventsList, createTripEvent(tripEvents[i]), RenderPosition.BEFOREEND);
 }
 
-renderElement(tripEventsList, createTripEventEditor(), RenderPosition.AFTERBEGIN);
+renderElement(tripEventsList, createTripEventEditor(tripEvents[0]), RenderPosition.AFTERBEGIN);
 renderElement(tripEventsContainer, createTripMessage(), RenderPosition.BEFOREEND);
