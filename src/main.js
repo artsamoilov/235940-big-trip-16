@@ -3,7 +3,6 @@ import {renderElement, RenderPosition} from './utils/render.js';
 import {createTripTabs} from './view/trip-tabs-view.js';
 import {createTripFilters} from './view/trip-filters-view.js';
 import {createTripSort} from './view/trip-sort-view.js';
-import {createTripMessage} from './view/trip-message-view.js';
 import {createTripInfo} from './view/trip-info-view.js';
 import {createTripEventsList} from './view/trip-events-list-view.js';
 import {createTripEvent} from './view/trip-event-view.js';
@@ -31,4 +30,3 @@ for (let i = 1; i < TRIP_EVENTS_COUNTER; i++) {
 }
 
 renderElement(tripEventsList, createTripEventEditor(tripEvents[0]), RenderPosition.AFTERBEGIN);
-renderElement(tripEventsContainer, createTripMessage(), RenderPosition.BEFOREEND);

@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {TRIP_CITIES, TRIP_EVENT_TYPES} from '../mock/trip-event.js';
+import {TRIP_CITIES, TRIP_EVENT_TYPES} from '../const';
 
 export const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers, type}) => {
   const startTime = dayjs(dateFrom);

@@ -1,24 +1,6 @@
 import dayjs from 'dayjs';
-
-export const TRIP_EVENT_TYPES = [
-  'taxi',
-  'bus',
-  'train',
-  'ship',
-  'drive',
-  'flight',
-  'check-in',
-  'sightseeing',
-  'restaurant',
-];
-
-export const TRIP_CITIES = [
-  'Amsterdam',
-  'Berlin',
-  'Chamonix',
-  'Dresden',
-  'Edinburgh',
-];
+import {TRIP_CITIES, TRIP_EVENT_TYPES} from '../const.js';
+import {getRandomInteger} from '../utils.js';
 
 const TRIP_EVENT_DESCRIPTIONS = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -48,12 +30,6 @@ const MAX_BASE_PRICE = 200;
 const MAX_OFFERS_COUNT = 5;
 const MAX_OFFER_PRICE = 100;
 const MAX_MINUTES_GAP = 1440;
-
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
 
 const getDescription = () => TRIP_EVENT_DESCRIPTIONS.sort(() => 0.5 - Math.random()).slice(0, getRandomInteger(0, MAX_DESCRIPTION_LENGTH - 1) + 1).join(' ');
 
