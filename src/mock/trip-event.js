@@ -29,7 +29,7 @@ const MAX_PHOTOS_COUNT = 10;
 const MAX_BASE_PRICE = 50;
 const MAX_OFFERS_COUNT = 5;
 const MAX_OFFER_PRICE = 10;
-const MAX_MINUTES_GAP = 1440;
+const MAX_MINUTES_GAP = 2880;
 
 const getDescription = () => TRIP_EVENT_DESCRIPTIONS.sort(() => 0.5 - Math.random()).slice(0, getRandomInteger(0, MAX_DESCRIPTION_LENGTH - 1) + 1).join(' ');
 
