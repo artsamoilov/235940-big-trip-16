@@ -7,6 +7,7 @@ import {createTripInfo} from './view/trip-info-view.js';
 import {createTripEventsList} from './view/trip-events-list-view.js';
 import {createTripEvent} from './view/trip-event-view.js';
 import {createTripEventEditor} from './view/trip-event-editor-view.js';
+import {createTripMessage} from './view/trip-message-view.js';
 
 const TRIP_EVENTS_COUNTER = 20;
 
@@ -17,11 +18,14 @@ const tripTabsContainer = document.querySelector('.trip-controls__navigation');
 const tripFiltersContainer = document.querySelector('.trip-controls__filters');
 const tripEventsContainer = document.querySelector('.trip-events');
 
-renderElement(tripMainContainer, createTripInfo(), RenderPosition.AFTERBEGIN);
 renderElement(tripTabsContainer, createTripTabs(), RenderPosition.BEFOREEND);
 renderElement(tripFiltersContainer, createTripFilters(), RenderPosition.BEFOREEND);
 renderElement(tripEventsContainer, createTripSort(), RenderPosition.BEFOREEND);
 renderElement(tripEventsContainer, createTripEventsList(), RenderPosition.BEFOREEND);
+
+if (TRIP_EVENTS_COUNTER === 0) {
+  renderElement(tripEventsContainer, createTripMessage(), RenderPosition.BEFOREEND);
+}
 
 const tripEventsList = tripEventsContainer.querySelector('.trip-events__list');
 
@@ -30,3 +34,4 @@ for (let i = 1; i < TRIP_EVENTS_COUNTER; i++) {
 }
 
 renderElement(tripEventsList, createTripEventEditor(tripEvents[0]), RenderPosition.AFTERBEGIN);
+renderElement(tripMainContainer, createTripInfo(tripEvents), RenderPosition.AFTERBEGIN);

@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import {TRIP_CITIES, TRIP_EVENT_TYPES} from '../const';
 
-export const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers, type}) => {
+export const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers, type}, isEventNew = false) => {
   const startTime = dayjs(dateFrom);
   const endTime = dayjs(dateTo);
 
@@ -27,7 +27,7 @@ export const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination,
     return destinationList.join('');
   };
 
-  const getEditorCloseButtons = (isEventNew) => isEventNew ?
+  const getEditorCloseButtons = () => isEventNew ?
     '<button class="event__reset-btn" type="reset">Close</button>' :
     `<button class="event__reset-btn" type="reset">Delete</button>
     <button class="event__rollup-btn" type="button">
@@ -126,7 +126,7 @@ export const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination,
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-        ${getEditorCloseButtons(true)}
+        ${getEditorCloseButtons()}
       </header>
       <section class="event__details">
         ${getOffersList()}
