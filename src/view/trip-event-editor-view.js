@@ -7,25 +7,13 @@ export const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination,
 
   const checkEventType = (eventType) => type === eventType ? 'checked' : '';
 
-  const getEventsList = () => {
-    const tripEventsList = [];
-    for (const tripEvent of TRIP_EVENT_TYPES) {
-      tripEventsList.push(`
-        <div class="event__type-item">
-          <input id="event-type-${tripEvent}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${tripEvent}" ${checkEventType(tripEvent)}>
-          <label class="event__type-label  event__type-label--${tripEvent}" for="event-type-${tripEvent}-1">${tripEvent}</label>
-        </div>`);
-    }
-    return tripEventsList.join('');
-  };
+  const getEventsList = () => TRIP_EVENT_TYPES.map((tripEvent) =>
+    `<div class="event__type-item">
+      <input id="event-type-${tripEvent}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${tripEvent}" ${checkEventType(tripEvent)}>
+      <label class="event__type-label  event__type-label--${tripEvent}" for="event-type-${tripEvent}-1">${tripEvent}</label>
+    </div>`).join('');
 
-  const getDestinationList = () => {
-    const destinationList = [];
-    for (const city of TRIP_CITIES) {
-      destinationList.push(`<option value="${city}"></option>`);
-    }
-    return destinationList.join('');
-  };
+  const getDestinationList = () => TRIP_CITIES.map((city) => `<option value="${city}"></option>`).join('');
 
   const getEditorCloseButtons = () => isEventNew ?
     '<button class="event__reset-btn" type="reset">Close</button>' :
@@ -34,52 +22,34 @@ export const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination,
       <span class="visually-hidden">Open event</span>
     </button>`;
 
-  const getOffersList = () => {
-    if (offers.offers.length > 0) {
-      const offersList = [];
-      for (const offer of offers.offers) {
-        offersList.push(`
-        <div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.id}" type="checkbox" name="event-offer-${offer.id}">
-          <label class="event__offer-label" for="event-offer-${offer.id}">
-            <span class="event__offer-title">${offer.title}</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">${offer.price}</span>
-          </label>
-        </div>`);
-      }
-      return `<section class="event__section  event__section--offers">
-                <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-                  <div class="event__available-offers">
-                    ${offersList.join('')}
-                  </div>
-              </section>`;
-    }
-    return '';
-  };
+  const getOffersList = () =>
+    `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+        <div class="event__available-offers">
+          ${offers.offers.map(({id, title, price}) => `<div class="event__offer-selector">
+            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}">
+            <label class="event__offer-label" for="event-offer-${id}">
+              <span class="event__offer-title">${title}</span>
+              &plus;&euro;&nbsp;
+              <span class="event__offer-price">${price}</span>
+            </label>
+          </div>`).join('')}
+        </div>
+    </section>`;
 
-  const getDestinationPictures = () => {
-    if (destination.pictures.length > 0) {
-      const picturesList = [];
-      for (const picture of destination.pictures) {
-        picturesList.push(`<img class="event__photo" src="${picture.src}" alt="${picture.description}">`);
-      }
-      return `<div class="event__photos-container">
-                <div class="event__photos-tape">
-                  ${picturesList.join('')}
-                </div>
-              </div>`;
-    }
-    return '';
-  };
+  const getDestinationPictures = () =>
+    `<div class="event__photos-container">
+      <div class="event__photos-tape">
+        ${destination.pictures.map(({src, description}) =>`<img class="event__photo" src="${src}" alt="${description}">`).join('')}
+      </div>
+    </div>`;
 
-  const getDestinationDescription = () => destination.description.length > 0 ?
+  const getDestinationDescription = () =>
     `<section class="event__section  event__section--destination">
       <h3 class="event__section-title  event__section-title--destination">Destination</h3>
       <p class="event__destination-description">${destination.description}</p>
-      ${getDestinationPictures()}
-    </section>` :
-    '';
+      ${destination.pictures.length > 0 ? getDestinationPictures() : ''}
+    </section>`;
 
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
@@ -129,8 +99,8 @@ export const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination,
         ${getEditorCloseButtons()}
       </header>
       <section class="event__details">
-        ${getOffersList()}
-        ${getDestinationDescription()}
+        ${offers.offers.length > 0 ? getOffersList() : ''}
+        ${destination.description.length > 0 ? getDestinationDescription() : ''}
       </section>
     </form>
   </li>`;

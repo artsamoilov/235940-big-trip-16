@@ -12,21 +12,12 @@ export const createTripEvent = ({basePrice, dateFrom, dateTo, destination, isFav
     return daysDifference + hoursDifference + minutesDifference;
   };
 
-  const getOfferNodes = () => {
-    if (offers.offers.length > 0) {
-      const offersList = [];
-      for (const offer of offers.offers) {
-        offersList.push(
-          `<li class="event__offer">
-            <span class="event__offer-title">${offer.title}</span>
-            &plus;&euro;&nbsp;
-            <span class="event__offer-price">${offer.price}</span>
-          </li>`);
-      }
-      return offersList.join('');
-    }
-    return '';
-  };
+  const getOfferNodes = () => offers.offers.map(({title, price}) =>
+    `<li class="event__offer">
+      <span class="event__offer-title">${title}</span>
+      &plus;&euro;&nbsp;
+      <span class="event__offer-price">${price}</span>
+    </li>`).join('');
 
   const getFavoriteClass = () => isFavorite ? ' event__favorite-btn--active' : '';
 
@@ -50,7 +41,7 @@ export const createTripEvent = ({basePrice, dateFrom, dateTo, destination, isFav
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        ${getOfferNodes()}
+        ${offers.offers.length > 0 ? getOfferNodes() : ''}
       </ul>
       <button class="event__favorite-btn${getFavoriteClass()}" type="button">
         <span class="visually-hidden">Add to favorite</span>
