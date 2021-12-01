@@ -18,6 +18,41 @@ const tripTabsContainer = document.querySelector('.trip-controls__navigation');
 const tripFiltersContainer = document.querySelector('.trip-controls__filters');
 const tripEventsContainer = document.querySelector('.trip-events');
 
+const renderTripEvent = (tripEventsListElement, tripEvent) => {
+  const tripEventComponent = new TripEventView(tripEvent);
+  const tripEventEditorComponent = new TripEventEditorView(tripEvent);
+
+  const switchEventToEditor = () => tripEventsListElement.replaceChild(tripEventEditorComponent.element, tripEventComponent.element);
+
+  const switchEditorToEvent = () => tripEventsListElement.replaceChild(tripEventComponent.element, tripEventEditorComponent.element);
+
+  const onEscKeydown = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      switchEditorToEvent();
+      document.removeEventListener('keydown', onEscKeydown);
+    }
+  };
+
+  tripEventComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    switchEventToEditor();
+    document.addEventListener('keydown', onEscKeydown);
+  });
+
+  tripEventEditorComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+    switchEditorToEvent();
+    document.removeEventListener('keydown', onEscKeydown);
+  });
+
+  tripEventEditorComponent.element.querySelector('form').addEventListener('submit', (evt) => {
+    evt.preventDefault();
+    switchEditorToEvent();
+    document.removeEventListener('keydown', onEscKeydown);
+  });
+
+  render (tripEventsListElement, tripEventComponent.element, RenderPosition.BEFOREEND);
+};
+
 render(tripTabsContainer, new TripTabsView().element, RenderPosition.BEFOREEND);
 render(tripFiltersContainer, new TripFiltersView().element, RenderPosition.BEFOREEND);
 
@@ -29,10 +64,9 @@ if (TRIP_EVENTS_COUNTER === 0) {
 
   const tripEventsList = tripEventsContainer.querySelector('.trip-events__list');
 
-  for (let i = 1; i < TRIP_EVENTS_COUNTER; i++) {
-    render(tripEventsList, new TripEventView(tripEvents[i]).element, RenderPosition.BEFOREEND);
+  for (let i = 0; i < TRIP_EVENTS_COUNTER; i++) {
+    renderTripEvent(tripEventsList, tripEvents[i]);
   }
 
-  render(tripEventsList, new TripEventEditorView(tripEvents[0]).element, RenderPosition.AFTERBEGIN);
   render(tripMainContainer, new TripInfoView(tripEvents).element, RenderPosition.AFTERBEGIN);
 }

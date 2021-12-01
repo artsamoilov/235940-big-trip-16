@@ -28,7 +28,7 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
           ${offers.offers.map(({id, title, price}) => `<div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}">
+            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" checked>
             <label class="event__offer-label" for="event-offer-${id}">
               <span class="event__offer-title">${title}</span>
               &plus;&euro;&nbsp;
