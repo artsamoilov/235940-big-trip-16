@@ -16,22 +16,24 @@ export const createTripInfo = (tripEvents) => {
 
   const getSortedEventsTo = () => tripEvents.slice().sort((firstEvent, secondEvent) => firstEvent.dateTo - secondEvent.dateTo);
 
+  const getTripRouteString = (firstEventName, middleEventName, lastEventName) => {
+    switch (tripEvents.length) {
+      case 1:
+        return firstEventName;
+      case 2:
+        return `${firstEventName} &mdash; ${lastEventName}`;
+      case 3:
+        return `${firstEventName} &mdash; ${middleEventName} &mdash; ${lastEventName}`;
+      default:
+        return `${firstEventName} &mdash; ... &mdash; ${lastEventName}`;
+    }
+  };
+
   const getTripRoute = () => {
     const firstTripEventName = getSortedEventsFrom()[0].destination.name;
     const lastTripEventName = getSortedEventsTo()[tripEvents.length - 1].destination.name;
     const middleTripEventName = getSortedEventsFrom()[Math.floor(tripEvents.length / 2)].destination.name;
-    switch (tripEvents.length) {
-      case 0:
-        return '';
-      case 1:
-        return firstTripEventName;
-      case 2:
-        return `${firstTripEventName} &mdash; ${lastTripEventName}`;
-      case 3:
-        return `${firstTripEventName} &mdash; ${middleTripEventName} &mdash; ${lastTripEventName}`;
-      default:
-        return `${firstTripEventName} &mdash; ... &mdash; ${lastTripEventName}`;
-    }
+    return getTripRouteString(firstTripEventName, middleTripEventName, lastTripEventName);
   };
 
   const getTripDuration = () => {
