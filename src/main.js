@@ -59,14 +59,10 @@ render(tripFiltersContainer, new TripFiltersView().element, RenderPosition.BEFOR
 if (TRIP_EVENTS_COUNTER === 0) {
   render(tripEventsContainer, new TripMessageView().element, RenderPosition.BEFOREEND);
 } else {
-  render(tripEventsContainer, new TripSortView().element, RenderPosition.BEFOREEND);
-  render(tripEventsContainer, new TripEventsListView().element, RenderPosition.BEFOREEND);
-
-  const tripEventsList = tripEventsContainer.querySelector('.trip-events__list');
-
-  for (let i = 0; i < TRIP_EVENTS_COUNTER; i++) {
-    renderTripEvent(tripEventsList, tripEvents[i]);
-  }
+  const tripEventsList = new TripEventsListView().element;
 
   render(tripMainContainer, new TripInfoView(tripEvents).element, RenderPosition.AFTERBEGIN);
+  render(tripEventsContainer, new TripSortView().element, RenderPosition.BEFOREEND);
+  render(tripEventsContainer, tripEventsList, RenderPosition.BEFOREEND);
+  tripEvents.forEach((tripEvent) => renderTripEvent(tripEventsList, tripEvent));
 }
