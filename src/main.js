@@ -1,6 +1,6 @@
 import {getTripEvent} from './mock/trip-event.js';
-import {renderElement, RenderPosition} from './utils/render.js';
-import {createTripTabs} from './view/trip-tabs-view.js';
+import {renderTemplate, renderElement, RenderPosition} from './utils/render.js';
+import TripTabsView from './view/trip-tabs-view.js';
 import {createTripFilters} from './view/trip-filters-view.js';
 import {createTripSort} from './view/trip-sort-view.js';
 import {createTripInfo} from './view/trip-info-view.js';
@@ -18,20 +18,20 @@ const tripTabsContainer = document.querySelector('.trip-controls__navigation');
 const tripFiltersContainer = document.querySelector('.trip-controls__filters');
 const tripEventsContainer = document.querySelector('.trip-events');
 
-renderElement(tripTabsContainer, createTripTabs(), RenderPosition.BEFOREEND);
-renderElement(tripFiltersContainer, createTripFilters(), RenderPosition.BEFOREEND);
-renderElement(tripEventsContainer, createTripSort(), RenderPosition.BEFOREEND);
-renderElement(tripEventsContainer, createTripEventsList(), RenderPosition.BEFOREEND);
+renderElement(tripTabsContainer, new TripTabsView().element, RenderPosition.BEFOREEND);
+renderTemplate(tripFiltersContainer, createTripFilters(), RenderPosition.BEFOREEND);
+renderTemplate(tripEventsContainer, createTripSort(), RenderPosition.BEFOREEND);
+renderTemplate(tripEventsContainer, createTripEventsList(), RenderPosition.BEFOREEND);
 
 if (TRIP_EVENTS_COUNTER === 0) {
-  renderElement(tripEventsContainer, createTripMessage(), RenderPosition.BEFOREEND);
+  renderTemplate(tripEventsContainer, createTripMessage(), RenderPosition.BEFOREEND);
 }
 
 const tripEventsList = tripEventsContainer.querySelector('.trip-events__list');
 
 for (let i = 1; i < TRIP_EVENTS_COUNTER; i++) {
-  renderElement(tripEventsList, createTripEvent(tripEvents[i]), RenderPosition.BEFOREEND);
+  renderTemplate(tripEventsList, createTripEvent(tripEvents[i]), RenderPosition.BEFOREEND);
 }
 
-renderElement(tripEventsList, createTripEventEditor(tripEvents[0]), RenderPosition.AFTERBEGIN);
-renderElement(tripMainContainer, createTripInfo(tripEvents), RenderPosition.AFTERBEGIN);
+renderTemplate(tripEventsList, createTripEventEditor(tripEvents[0]), RenderPosition.AFTERBEGIN);
+renderTemplate(tripMainContainer, createTripInfo(tripEvents), RenderPosition.AFTERBEGIN);
