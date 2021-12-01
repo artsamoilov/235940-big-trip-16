@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
+import {createElement} from '../utils/render.js';
 
-export const createTripInfo = (tripEvents) => {
+const createTripInfo = (tripEvents) => {
   const getTotalPrice = () => {
     let totalPrice = 0;
     tripEvents.forEach((tripEvent) => {
@@ -56,3 +57,27 @@ export const createTripInfo = (tripEvents) => {
     </section>` :
     '';
 };
+
+export default class TripInfoView {
+  #element = null;
+  #tripEvents = null;
+
+  constructor(tripEvents = null) {
+    this.#tripEvents = tripEvents;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+    return this.#element;
+  }
+
+  get template() {
+    return createTripInfo(this.#tripEvents);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}

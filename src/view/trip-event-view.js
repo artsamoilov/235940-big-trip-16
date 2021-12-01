@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
+import {createElement} from '../utils/render.js';
 
-export const createTripEvent = ({basePrice, dateFrom, dateTo, destination, isFavorite, offers, type}) => {
+const createTripEvent = ({basePrice, dateFrom, dateTo, destination, isFavorite, offers, type}) => {
   const startTime = dayjs(dateFrom);
   const endTime = dayjs(dateTo);
 
@@ -55,3 +56,27 @@ export const createTripEvent = ({basePrice, dateFrom, dateTo, destination, isFav
     </div>
   </li>`;
 };
+
+export default class TripEventView {
+  #element = null;
+  #tripEvent = {};
+
+  constructor(tripEvent = {}) {
+    this.#tripEvent = tripEvent;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+    return this.#element;
+  }
+
+  get template() {
+    return createTripEvent(this.#tripEvent);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}

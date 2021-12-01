@@ -1,7 +1,8 @@
 import dayjs from 'dayjs';
 import {TRIP_CITIES, TRIP_EVENT_TYPES} from '../const';
+import {createElement} from '../utils/render.js';
 
-export const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers, type}, isEventNew = false) => {
+const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers, type}, isEventNew) => {
   const startTime = dayjs(dateFrom);
   const endTime = dayjs(dateTo);
 
@@ -105,3 +106,29 @@ export const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination,
     </form>
   </li>`;
 };
+
+export default class TripEventEditorView {
+  #element = null;
+  #tripEvent = {};
+  #isEventNew = null;
+
+  constructor(tripEvent = {}, isEventNew = false) {
+    this.#tripEvent = tripEvent;
+    this.#isEventNew = isEventNew;
+  }
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+    return this.#element;
+  }
+
+  get template() {
+    return createTripEventEditor(this.#tripEvent, this.#isEventNew);
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
