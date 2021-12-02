@@ -1,4 +1,6 @@
-export const createTripStatistics = () => (
+import {createElement} from '../utils/render.js';
+
+const createTripStatistics = () => (
   `<section class="statistics">
     <h2 class="visually-hidden">Trip statistics</h2>
 
@@ -17,3 +19,22 @@ export const createTripStatistics = () => (
     </div>
   </section>`
 );
+
+export default class TripStatisticsView {
+  #element = null;
+
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
+    }
+    return this.#element;
+  }
+
+  get template() {
+    return createTripStatistics();
+  }
+
+  removeElement() {
+    this.#element = null;
+  }
+}
