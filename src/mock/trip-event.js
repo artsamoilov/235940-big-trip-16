@@ -47,17 +47,10 @@ const getPhotoCount = () => getRandomInteger(0, MAX_PHOTOS_COUNT - 1) + 1;
 
 const getDate = () => dayjs().add(getRandomInteger(-MAX_MINUTES_GAP, MAX_MINUTES_GAP), 'minute');
 
-const getPhotos = () => {
-  const photoObjectsList = [];
-  const photoCount = getPhotoCount();
-  for (let i = 0; i < photoCount; i++) {
-    photoObjectsList.push({
-      src: `http://picsum.photos/300/200?r=${Math.random()}`,
-      description: `Random photo №${i + 1}`,
-    });
-  }
-  return photoObjectsList;
-};
+const getPhotos = () => Array.from({length: getPhotoCount()}, (value, index) => ({
+  src: `http://picsum.photos/300/200?r=${Math.random()}`,
+  description: `Random photo №${index + 1}`,
+}));
 
 const getDestination = () => ({
   description: getDescription(),
@@ -65,19 +58,10 @@ const getDestination = () => ({
   pictures: getPhotos(),
 });
 
-const getSingleOffer = (id, title) => ({
-  id,
-  title,
-  price: getOfferPrice(),
-});
-
 const getOffers = (type) => {
   const offersCount = getOffersCount();
   const offersTitles = OFFER_TITLES.sort(() => getRandomInteger(-1, 1)).slice(0, offersCount);
-  const offers = [];
-  for (let i = 0; i < offersCount; i++) {
-    offers.push(getSingleOffer(i, offersTitles[i]));
-  }
+  const offers = Array.from({length: offersCount}, (value, index) => ({id: index, title: offersTitles[index], price: getOfferPrice()}));
   return {type, offers};
 };
 
