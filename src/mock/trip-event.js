@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import {TRIP_CITIES, TRIP_EVENT_TYPES} from '../const.js';
-import {getRandomInteger} from '../utils.js';
+import {TRIP_CITIES, TRIP_EVENT_TYPES} from '../utils/const.js';
+import {getRandomInteger} from '../utils/common.js';
 
 const TRIP_EVENT_DESCRIPTIONS = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',

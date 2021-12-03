@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {TRIP_CITIES, TRIP_EVENT_TYPES} from '../const';
+import {TRIP_CITIES, TRIP_EVENT_TYPES} from '../utils/const.js';
 import AbstractView from './abstract-view.js';
 
 const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers, type}, isEventNew) => {
