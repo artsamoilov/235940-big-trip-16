@@ -18,13 +18,13 @@ const tripTabsContainer = document.querySelector('.trip-controls__navigation');
 const tripFiltersContainer = document.querySelector('.trip-controls__filters');
 const tripEventsContainer = document.querySelector('.trip-events');
 
-const renderTripEvent = (tripEventsListElement, tripEvent) => {
+const renderTripEvent = (tripEventsList, tripEvent) => {
   const tripEventComponent = new TripEventView(tripEvent);
   const tripEventEditorComponent = new TripEventEditorView(tripEvent);
 
-  const switchEventToEditor = () => tripEventsListElement.replaceChild(tripEventEditorComponent.element, tripEventComponent.element);
+  const switchEventToEditor = () => tripEventsList.element.replaceChild(tripEventEditorComponent.element, tripEventComponent.element);
 
-  const switchEditorToEvent = () => tripEventsListElement.replaceChild(tripEventComponent.element, tripEventEditorComponent.element);
+  const switchEditorToEvent = () => tripEventsList.element.replaceChild(tripEventComponent.element, tripEventEditorComponent.element);
 
   const onEscKeydown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
@@ -50,19 +50,19 @@ const renderTripEvent = (tripEventsListElement, tripEvent) => {
     document.removeEventListener('keydown', onEscKeydown);
   });
 
-  render (tripEventsListElement, tripEventComponent.element, RenderPosition.BEFOREEND);
+  render (tripEventsList, tripEventComponent, RenderPosition.BEFOREEND);
 };
 
-render(tripTabsContainer, new TripTabsView().element, RenderPosition.BEFOREEND);
-render(tripFiltersContainer, new TripFiltersView().element, RenderPosition.BEFOREEND);
+render(tripTabsContainer, new TripTabsView(), RenderPosition.BEFOREEND);
+render(tripFiltersContainer, new TripFiltersView(), RenderPosition.BEFOREEND);
 
 if (TRIP_EVENTS_COUNTER === 0) {
-  render(tripEventsContainer, new TripMessageView().element, RenderPosition.BEFOREEND);
+  render(tripEventsContainer, new TripMessageView(), RenderPosition.BEFOREEND);
 } else {
-  const tripEventsList = new TripEventsListView().element;
+  const tripEventsList = new TripEventsListView();
 
-  render(tripMainContainer, new TripInfoView(tripEvents).element, RenderPosition.AFTERBEGIN);
-  render(tripEventsContainer, new TripSortView().element, RenderPosition.BEFOREEND);
+  render(tripMainContainer, new TripInfoView(tripEvents), RenderPosition.AFTERBEGIN);
+  render(tripEventsContainer, new TripSortView(), RenderPosition.BEFOREEND);
   render(tripEventsContainer, tripEventsList, RenderPosition.BEFOREEND);
   tripEvents.forEach((tripEvent) => renderTripEvent(tripEventsList, tripEvent));
 }
