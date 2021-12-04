@@ -1,5 +1,5 @@
 import {getTripEvent} from './mock/trip-event.js';
-import {render, RenderPosition} from './utils/render.js';
+import {render, replace, RenderPosition} from './utils/render.js';
 import TripTabsView from './view/trip-tabs-view.js';
 import TripFiltersView from './view/trip-filters-view.js';
 import TripSortView from './view/trip-sort-view.js';
@@ -22,9 +22,9 @@ const renderTripEvent = (tripEventsList, tripEvent) => {
   const tripEventComponent = new TripEventView(tripEvent);
   const tripEventEditorComponent = new TripEventEditorView(tripEvent);
 
-  const switchEventToEditor = () => tripEventsList.element.replaceChild(tripEventEditorComponent.element, tripEventComponent.element);
+  const switchEventToEditor = () => replace(tripEventEditorComponent, tripEventComponent);
 
-  const switchEditorToEvent = () => tripEventsList.element.replaceChild(tripEventComponent.element, tripEventEditorComponent.element);
+  const switchEditorToEvent = () => replace(tripEventComponent, tripEventEditorComponent);
 
   const onEscKeydown = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {

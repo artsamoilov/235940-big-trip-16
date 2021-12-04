@@ -27,10 +27,26 @@ const render = (container, element, place) => {
   }
 };
 
+const replace = (newItem, oldItem) => {
+  if (newItem === null || oldItem === null) {
+    throw new Error('Can\'t replace inexisting element');
+  }
+
+  const newChild = newItem instanceof AbstractView ? newItem.element : newItem;
+  const oldChild = oldItem instanceof AbstractView ? oldItem.element : oldItem;
+  const parent = oldChild.parentElement;
+
+  if (parent === null) {
+    throw new Error('Element\'s parent doesn\'t exist');
+  }
+
+  parent.replaceChild(newChild, oldChild);
+};
+
 const createElement = (template) => {
   const newElement = document.createElement('div');
   newElement.innerHTML = template;
   return newElement.firstElementChild;
 };
 
-export {RenderPosition, render, createElement};
+export {RenderPosition, render, replace, createElement};
