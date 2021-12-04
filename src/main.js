@@ -34,18 +34,17 @@ const renderTripEvent = (tripEventsList, tripEvent) => {
     }
   };
 
-  tripEventComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+  tripEventComponent.setExpandClickHandler(() => {
     switchEventToEditor();
     document.addEventListener('keydown', onEscKeydown);
   });
 
-  tripEventEditorComponent.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+  tripEventEditorComponent.setCollapseClickHandler(() => {
     switchEditorToEvent();
     document.removeEventListener('keydown', onEscKeydown);
   });
 
-  tripEventEditorComponent.element.querySelector('form').addEventListener('submit', (evt) => {
-    evt.preventDefault();
+  tripEventEditorComponent.setSubmitFormHandler(() => {
     switchEditorToEvent();
     document.removeEventListener('keydown', onEscKeydown);
   });

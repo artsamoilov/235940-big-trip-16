@@ -120,4 +120,24 @@ export default class TripEventEditorView extends AbstractView {
   get template() {
     return createTripEventEditor(this.#tripEvent, this.#isEventNew);
   }
+
+  #collapseClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.collapseClick();
+  }
+
+  setCollapseClickHandler = (callback) => {
+    this._callback.collapseClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#collapseClickHandler);
+  }
+
+  #submitFormHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.submitForm();
+  }
+
+  setSubmitFormHandler = (callback) => {
+    this._callback.submitForm = callback;
+    this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
+  }
 }
