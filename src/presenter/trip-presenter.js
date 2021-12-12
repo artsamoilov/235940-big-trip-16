@@ -1,8 +1,7 @@
-import {render, replace, RenderPosition} from '../utils/render.js';
+import {render, RenderPosition} from '../utils/render.js';
+import {updateItem} from '../utils/common.js';
 import TripSortView from '../view/trip-sort-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
-import TripEventView from '../view/trip-event-view.js';
-import TripEventEditorView from '../view/trip-event-editor-view.js';
 import TripMessageView from '../view/trip-message-view.js';
 import TripEventPresenter from './trip-event-presenter.js';
 
@@ -14,6 +13,7 @@ export default class TripPresenter {
   #tripEventsListComponent = new TripEventsListView();
 
   #tripEvents = [];
+  #tripEventPresenter = new Map();
 
   constructor(tripEventsContainer) {
     this.#tripEventsContainer = tripEventsContainer;
@@ -24,13 +24,17 @@ export default class TripPresenter {
     this.#renderTrip();
   }
 
-  #renderTripSort = () => {
-    render(this.#tripEventsContainer, this.#tripSortComponent, RenderPosition.BEFOREEND);
-  }
+  #renderTripSort = () => render(this.#tripEventsContainer, this.#tripSortComponent, RenderPosition.BEFOREEND);
 
   #renderTripEvent = (tripEvent) => {
-    const tripEventPresenter = new TripEventPresenter(this.#tripEventsListComponent);
+    const tripEventPresenter = new TripEventPresenter(this.#tripEventsListComponent, this.#handleTripEventChange);
     tripEventPresenter.init(tripEvent);
+    this.#tripEventPresenter.set(tripEvent.id, tripEventPresenter);
+  }
+
+  #handleTripEventChange = (updatedTripEvent) => {
+    this.#tripEvents = updateItem(this.#tripEvents, updatedTripEvent);
+    this.#tripEventPresenter.get(updatedTripEvent.id).init(updatedTripEvent);
   }
 
   #renderTripEventsList = () => {
@@ -38,9 +42,7 @@ export default class TripPresenter {
     this.#tripEvents.forEach((tripEvent) => this.#renderTripEvent(tripEvent));
   }
 
-  #renderTripMessage = () => {
-    render(this.#tripEventsContainer, this.#tripMessageComponent, RenderPosition.BEFOREEND);
-  }
+  #renderTripMessage = () => render(this.#tripEventsContainer, this.#tripMessageComponent, RenderPosition.BEFOREEND);
 
   #renderTrip = () => {
     if (this.#tripEvents.length === 0) {
@@ -49,5 +51,10 @@ export default class TripPresenter {
       this.#renderTripSort();
       this.#renderTripEventsList();
     }
+  }
+
+  #clearTrip = () => {
+    this.#tripEventPresenter.forEach((presenter) => presenter.destroy());
+    this.#tripEventPresenter.clear();
   }
 }
