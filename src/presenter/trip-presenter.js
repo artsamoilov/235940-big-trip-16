@@ -27,10 +27,12 @@ export default class TripPresenter {
   #renderTripSort = () => render(this.#tripEventsContainer, this.#tripSortComponent, RenderPosition.BEFOREEND);
 
   #renderTripEvent = (tripEvent) => {
-    const tripEventPresenter = new TripEventPresenter(this.#tripEventsListComponent, this.#handleTripEventChange);
+    const tripEventPresenter = new TripEventPresenter(this.#tripEventsListComponent, this.#handleTripEventChange, this.#handleModeChange);
     tripEventPresenter.init(tripEvent);
     this.#tripEventPresenter.set(tripEvent.id, tripEventPresenter);
   }
+
+  #handleModeChange = () => this.#tripEventPresenter.forEach((presenter) => presenter.resetView());
 
   #handleTripEventChange = (updatedTripEvent) => {
     this.#tripEvents = updateItem(this.#tripEvents, updatedTripEvent);

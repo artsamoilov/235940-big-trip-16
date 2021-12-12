@@ -2,18 +2,26 @@ import {render, replace, remove, RenderPosition} from '../utils/render.js';
 import TripEventView from '../view/trip-event-view.js';
 import TripEventEditorView from '../view/trip-event-editor-view.js';
 
+const Mode = {
+  DEFAULT: 'DEFAULT',
+  EDITING: 'EDITING',
+};
+
 export default class TripEventPresenter {
   #tripEventsListComponent = null;
   #changeData = null;
+  #changeMode = null;
 
   #tripEventComponent = null;
   #tripEventEditorComponent = null;
 
   #tripEvent = null;
+  #mode = Mode.DEFAULT;
 
-  constructor(tripEventsListComponent, changeData) {
+  constructor(tripEventsListComponent, changeData, changeMode) {
     this.#tripEventsListComponent = tripEventsListComponent;
     this.#changeData = changeData;
+    this.#changeMode = changeMode;
   }
 
   init = (tripEvent = {}) => {
@@ -35,11 +43,11 @@ export default class TripEventPresenter {
       return;
     }
 
-    if (this.#tripEventsListComponent.element.contains(existingTripEventComponent.element)) {
+    if (this.#mode === Mode.DEFAULT) {
       replace(this.#tripEventComponent, existingTripEventComponent);
     }
 
-    if (this.#tripEventsListComponent.element.contains(existingTripEventEditorComponent.element)) {
+    if (this.#mode === Mode.EDITING) {
       replace(this.#tripEventEditorComponent, existingTripEventEditorComponent);
     }
 
@@ -52,14 +60,23 @@ export default class TripEventPresenter {
     remove(this.#tripEventEditorComponent);
   }
 
+  resetView = () => {
+    if (this.#mode !== Mode.DEFAULT) {
+      this.#switchEditorToEvent();
+    }
+  }
+
   #switchEventToEditor = () => {
     replace(this.#tripEventEditorComponent, this.#tripEventComponent);
     document.addEventListener('keydown', this.#escKeydownHandler);
+    this.#changeMode();
+    this.#mode = Mode.EDITING;
   }
 
   #switchEditorToEvent = () => {
     replace(this.#tripEventComponent, this.#tripEventEditorComponent);
     document.removeEventListener('keydown', this.#escKeydownHandler);
+    this.#mode = Mode.DEFAULT;
   }
 
   #escKeydownHandler = (evt) => {
