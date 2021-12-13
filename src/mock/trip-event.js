@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 import {TRIP_CITIES, TRIP_EVENT_TYPES} from '../utils/const.js';
 import {getRandomInteger} from '../utils/common.js';
 
@@ -70,6 +71,7 @@ export const getTripEvent = () => {
   const firstDate = getDate();
   const secondDate = getDate();
   return {
+    id: nanoid(),
     basePrice: getBasePrice(),
     dateFrom: dayjs(Math.min(firstDate, secondDate)).toDate(),
     dateTo: dayjs(Math.max(firstDate, secondDate)).toDate(),

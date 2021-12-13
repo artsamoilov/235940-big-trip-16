@@ -1,0 +1,62 @@
+import {render, RenderPosition} from '../utils/render.js';
+import {updateItem} from '../utils/common.js';
+import TripSortView from '../view/trip-sort-view.js';
+import TripEventsListView from '../view/trip-events-list-view.js';
+import TripMessageView from '../view/trip-message-view.js';
+import TripEventPresenter from './trip-event-presenter.js';
+
+export default class TripPresenter {
+  #tripEventsContainer = null;
+
+  #tripSortComponent = new TripSortView();
+  #tripMessageComponent = new TripMessageView();
+  #tripEventsListComponent = new TripEventsListView();
+
+  #tripEvents = [];
+  #tripEventPresenter = new Map();
+
+  constructor(tripEventsContainer) {
+    this.#tripEventsContainer = tripEventsContainer;
+  }
+
+  init = (tripEvents) => {
+    this.#tripEvents = [...tripEvents];
+    this.#renderTrip();
+  }
+
+  #renderTripSort = () => render(this.#tripEventsContainer, this.#tripSortComponent, RenderPosition.BEFOREEND);
+
+  #renderTripEvent = (tripEvent) => {
+    const tripEventPresenter = new TripEventPresenter(this.#tripEventsListComponent, this.#handleTripEventChange, this.#handleModeChange);
+    tripEventPresenter.init(tripEvent);
+    this.#tripEventPresenter.set(tripEvent.id, tripEventPresenter);
+  }
+
+  #handleModeChange = () => this.#tripEventPresenter.forEach((presenter) => presenter.resetView());
+
+  #handleTripEventChange = (updatedTripEvent) => {
+    this.#tripEvents = updateItem(this.#tripEvents, updatedTripEvent);
+    this.#tripEventPresenter.get(updatedTripEvent.id).init(updatedTripEvent);
+  }
+
+  #renderTripEventsList = () => {
+    render(this.#tripEventsContainer, this.#tripEventsListComponent, RenderPosition.BEFOREEND);
+    this.#tripEvents.forEach((tripEvent) => this.#renderTripEvent(tripEvent));
+  }
+
+  #renderTripMessage = () => render(this.#tripEventsContainer, this.#tripMessageComponent, RenderPosition.BEFOREEND);
+
+  #renderTrip = () => {
+    if (this.#tripEvents.length === 0) {
+      this.#renderTripMessage();
+    } else {
+      this.#renderTripSort();
+      this.#renderTripEventsList();
+    }
+  }
+
+  #clearTrip = () => {
+    this.#tripEventPresenter.forEach((presenter) => presenter.destroy());
+    this.#tripEventPresenter.clear();
+  }
+}

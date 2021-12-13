@@ -133,7 +133,7 @@ export default class TripEventEditorView extends AbstractView {
 
   #submitFormHandler = (evt) => {
     evt.preventDefault();
-    this._callback.submitForm();
+    this._callback.submitForm(this.#tripEvent);
   }
 
   setSubmitFormHandler = (callback) => {

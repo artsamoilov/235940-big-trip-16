@@ -43,6 +43,19 @@ const replace = (newItem, oldItem) => {
   parent.replaceChild(newChild, oldChild);
 };
 
+export const remove = (component) => {
+  if (component === null) {
+    return;
+  }
+
+  if (!(component instanceof AbstractView)) {
+    throw new Error('Can remove only components');
+  }
+
+  component.element.remove();
+  component.removeElement();
+};
+
 const createElement = (template) => {
   const newElement = document.createElement('div');
   newElement.innerHTML = template;
