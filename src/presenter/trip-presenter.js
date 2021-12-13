@@ -49,10 +49,11 @@ export default class TripPresenter {
   #renderTrip = () => {
     if (this.#tripEvents.length === 0) {
       this.#renderTripMessage();
-    } else {
-      this.#renderTripSort();
-      this.#renderTripEventsList();
+      return;
     }
+
+    this.#renderTripSort();
+    this.#renderTripEventsList();
   }
 
   #clearTrip = () => {
