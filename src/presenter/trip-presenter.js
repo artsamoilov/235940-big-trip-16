@@ -1,5 +1,7 @@
 import {render, RenderPosition} from '../utils/render.js';
 import {updateItem} from '../utils/common.js';
+import {SortType} from '../utils/const.js';
+import {sortTripEventsByDay, sortTripEventsByTime, sortTripEventsByPrice} from '../utils/sort.js';
 import TripSortView from '../view/trip-sort-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import TripMessageView from '../view/trip-message-view.js';
@@ -14,17 +16,46 @@ export default class TripPresenter {
 
   #tripEvents = [];
   #tripEventPresenter = new Map();
+  #currentSortType = SortType.DAY;
 
   constructor(tripEventsContainer) {
     this.#tripEventsContainer = tripEventsContainer;
   }
 
   init = (tripEvents) => {
-    this.#tripEvents = [...tripEvents];
+    this.#tripEvents = [...tripEvents].sort(sortTripEventsByDay);
     this.#renderTrip();
   }
 
-  #renderTripSort = () => render(this.#tripEventsContainer, this.#tripSortComponent, RenderPosition.BEFOREEND);
+  #sortTripEvents = (sortType) => {
+    switch(sortType) {
+      case SortType.TIME:
+        this.#tripEvents.sort(sortTripEventsByTime);
+        break;
+      case SortType.PRICE:
+        this.#tripEvents.sort(sortTripEventsByPrice);
+        break;
+      default:
+        this.#tripEvents.sort(sortTripEventsByDay);
+    }
+
+    this.#currentSortType = sortType;
+  }
+
+  #handleSortTypeChange = (sortType) => {
+    if (this.#currentSortType === sortType) {
+      return;
+    }
+
+    this.#sortTripEvents(sortType);
+    this.#clearTrip();
+    this.#renderTripEventsList();
+  }
+
+  #renderTripSort = () => {
+    render(this.#tripEventsContainer, this.#tripSortComponent, RenderPosition.BEFOREEND);
+    this.#tripSortComponent.setSortTypeChangeHandler(this.#handleSortTypeChange);
+  }
 
   #renderTripEvent = (tripEvent) => {
     const tripEventPresenter = new TripEventPresenter(this.#tripEventsListComponent, this.#handleTripEventChange, this.#handleModeChange);
