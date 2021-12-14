@@ -43,10 +43,6 @@ export default class TripPresenter {
   }
 
   #handleSortTypeChange = (sortType) => {
-    if (this.#currentSortType === sortType) {
-      return;
-    }
-
     this.#sortTripEvents(sortType);
     this.#clearTrip();
     this.#renderTripEventsList();
