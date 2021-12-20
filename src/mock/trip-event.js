@@ -32,7 +32,7 @@ const MAX_OFFERS_COUNT = 5;
 const MAX_OFFER_PRICE = 10;
 const MAX_MINUTES_GAP = 2880;
 
-const getDescription = () => TRIP_EVENT_DESCRIPTIONS.sort(() => 0.5 - Math.random()).slice(0, getRandomInteger(0, MAX_DESCRIPTION_LENGTH - 1) + 1).join(' ');
+export const getDescription = () => TRIP_EVENT_DESCRIPTIONS.sort(() => 0.5 - Math.random()).slice(0, getRandomInteger(0, MAX_DESCRIPTION_LENGTH - 1) + 1).join(' ');
 
 const getTripCity = () => TRIP_CITIES[getRandomInteger(0, TRIP_CITIES.length - 1)];
 
@@ -48,7 +48,7 @@ const getPhotoCount = () => getRandomInteger(0, MAX_PHOTOS_COUNT - 1) + 1;
 
 const getDate = () => dayjs().add(getRandomInteger(-MAX_MINUTES_GAP, MAX_MINUTES_GAP), 'minute');
 
-const getPhotos = () => Array.from({length: getPhotoCount()}, (value, index) => ({
+export const getPhotos = () => Array.from({length: getPhotoCount()}, (value, index) => ({
   src: `http://picsum.photos/300/200?r=${Math.random()}`,
   description: `Random photo №${index + 1}`,
 }));
@@ -59,7 +59,7 @@ const getDestination = () => ({
   pictures: getPhotos(),
 });
 
-const getOffers = (type) => {
+export const getOffers = (type) => {
   const offersCount = getOffersCount();
   const offersTitles = OFFER_TITLES.sort(() => getRandomInteger(-1, 1)).slice(0, offersCount);
   const offers = Array.from({length: offersCount}, (value, index) => ({id: index, title: offersTitles[index], price: getOfferPrice()}));

@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import {TRIP_CITIES, TRIP_EVENT_TYPES} from '../utils/const.js';
-import AbstractView from './abstract-view.js';
+import {getDescription, getPhotos, getOffers} from '../mock/trip-event.js';
+import SmartView from './smart-view.js';
 
 const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers, type}, isEventNew) => {
   const startTime = dayjs(dateFrom);
@@ -107,18 +108,18 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers
   </li>`;
 };
 
-export default class TripEventEditorView extends AbstractView {
-  #tripEvent = {};
+export default class TripEventEditorView extends SmartView {
   #isEventNew = null;
 
   constructor(tripEvent = {}, isEventNew = false) {
     super();
-    this.#tripEvent = tripEvent;
+    this._data = tripEvent;
     this.#isEventNew = isEventNew;
+    this.#setInnerHandlers();
   }
 
   get template() {
-    return createTripEventEditor(this.#tripEvent, this.#isEventNew);
+    return createTripEventEditor(this._data, this.#isEventNew);
   }
 
   #collapseClickHandler = (evt) => {
@@ -133,11 +134,35 @@ export default class TripEventEditorView extends AbstractView {
 
   #submitFormHandler = (evt) => {
     evt.preventDefault();
-    this._callback.submitForm(this.#tripEvent);
+    this._callback.submitForm(this._data);
   }
 
   setSubmitFormHandler = (callback) => {
     this._callback.submitForm = callback;
     this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
   }
+
+  #changeEventTypeHandler = (evt) => this.updateData({
+    type: evt.target.value,
+    offers: getOffers(evt.target.value),
+  });
+
+  #changeEventCityHandler = (evt) => this.updateData({destination: {
+    name: evt.target.value,
+    description: getDescription(),
+    pictures: getPhotos()},
+  });
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeEventCityHandler);
+  }
+
+  restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setSubmitFormHandler(this._callback.submitForm);
+    this.setCollapseClickHandler(this._callback.collapseClick);
+  }
+
+  reset = (tripEvent) => this.updateData(tripEvent);
 }

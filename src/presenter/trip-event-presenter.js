@@ -62,6 +62,7 @@ export default class TripEventPresenter {
 
   resetView = () => {
     if (this.#mode !== Mode.DEFAULT) {
+      this.#tripEventEditorComponent.reset(this.#tripEvent);
       this.#switchEditorToEvent();
     }
   }
@@ -82,6 +83,7 @@ export default class TripEventPresenter {
   #escKeydownHandler = (evt) => {
     if (evt.key === 'Escape' || evt.key === 'Esc') {
       evt.preventDefault();
+      this.#tripEventEditorComponent.reset(this.#tripEvent);
       this.#switchEditorToEvent();
       document.removeEventListener('keydown', this.#escKeydownHandler);
     }
@@ -91,7 +93,10 @@ export default class TripEventPresenter {
 
   #handleExpandClick = () => this.#switchEventToEditor();
 
-  #handleCollapseClick = () => this.#switchEditorToEvent();
+  #handleCollapseClick = () => {
+    this.#tripEventEditorComponent.reset(this.#tripEvent);
+    this.#switchEditorToEvent();
+  }
 
   #handleFormSubmit = (tripEvent) => {
     this.#changeData(tripEvent);
