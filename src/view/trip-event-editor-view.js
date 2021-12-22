@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import {TRIP_CITIES, TripEventType, Offer} from '../utils/const.js';
-import {Destination} from '../mock/trip-event-destination.js';
+import {getDestination} from '../mock/trip-event-destination.js';
 import SmartView from './smart-view.js';
 
 const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers, type}, isEventNew) => {
@@ -104,7 +104,7 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers
       </header>
       <section class="event__details">
         ${getOffersList()}
-        ${destination.description.length > 0 ? getDestinationDescription() : ''}
+        ${destination.description ? getDestinationDescription() : ''}
       </section>
     </form>
   </li>`;
@@ -150,11 +150,8 @@ export default class TripEventEditorView extends SmartView {
   });
 
   #changeEventCityHandler = (evt) => {
-    const newDestination = Destination.find((city) => city.name === evt.target.value);
-    this.updateData({destination: {
-      name: newDestination.name,
-      description: newDestination.description,
-      pictures: newDestination.pictures}});
+    const newDestination = getDestination(evt.target.value) || {name: evt.target.value};
+    this.updateData({destination: newDestination});
   };
 
   #setInnerHandlers = () => {

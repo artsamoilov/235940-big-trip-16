@@ -3,8 +3,7 @@ export const TRIP_CITIES = [
   'Berlin',
   'Chamonix',
   'Dresden',
-  'Edinburgh',
-];
+  'Edinburgh'];
 
 export const TRIP_EVENT_DESCRIPTIONS = [
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
