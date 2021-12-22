@@ -6,7 +6,7 @@ const createTripInfo = (tripEvents) => {
     let totalPrice = 0;
     tripEvents.forEach((tripEvent) => {
       totalPrice += tripEvent.basePrice;
-      tripEvent.offers.offers.forEach((offer) => {
+      tripEvent.offers.forEach((offer) => {
         totalPrice += offer.price;
       });
     });
