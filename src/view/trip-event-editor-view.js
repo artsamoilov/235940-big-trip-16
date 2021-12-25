@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
-import {TRIP_CITIES, TRIP_EVENT_TYPES} from '../utils/const.js';
-import AbstractView from './abstract-view.js';
+import {TRIP_CITIES, TripEventType, Offer} from '../utils/const.js';
+import {getDestination} from '../mock/trip-event-destination.js';
+import SmartView from './smart-view.js';
 
 const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers, type}, isEventNew) => {
   const startTime = dayjs(dateFrom);
@@ -8,7 +9,7 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers
 
   const checkEventType = (eventType) => type === eventType ? 'checked' : '';
 
-  const getEventsList = () => TRIP_EVENT_TYPES.map((tripEvent) =>
+  const getEventsList = () => Object.values(TripEventType).map((tripEvent) =>
     `<div class="event__type-item">
       <input id="event-type-${tripEvent}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${tripEvent}" ${checkEventType(tripEvent)}>
       <label class="event__type-label  event__type-label--${tripEvent}" for="event-type-${tripEvent}-1">${tripEvent}</label>
@@ -23,12 +24,14 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers
       <span class="visually-hidden">Open event</span>
     </button>`;
 
+  const getOfferCheckedStatus = (id) => offers.some((offer) => offer.id === id) ? 'checked' : '';
+
   const getOffersList = () =>
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
-          ${offers.offers.map(({id, title, price}) => `<div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" checked>
+          ${Offer.find((offer) => offer.type === type).offers.map(({id, title, price}) =>`<div class="event__offer-selector">
+            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" ${getOfferCheckedStatus(id)}>
             <label class="event__offer-label" for="event-offer-${id}">
               <span class="event__offer-title">${title}</span>
               &plus;&euro;&nbsp;
@@ -100,25 +103,25 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers
         ${getEditorCloseButtons()}
       </header>
       <section class="event__details">
-        ${offers.offers.length > 0 ? getOffersList() : ''}
-        ${destination.description.length > 0 ? getDestinationDescription() : ''}
+        ${getOffersList()}
+        ${destination.description ? getDestinationDescription() : ''}
       </section>
     </form>
   </li>`;
 };
 
-export default class TripEventEditorView extends AbstractView {
-  #tripEvent = {};
+export default class TripEventEditorView extends SmartView {
   #isEventNew = null;
 
   constructor(tripEvent = {}, isEventNew = false) {
     super();
-    this.#tripEvent = tripEvent;
+    this._data = tripEvent;
     this.#isEventNew = isEventNew;
+    this.#setInnerHandlers();
   }
 
   get template() {
-    return createTripEventEditor(this.#tripEvent, this.#isEventNew);
+    return createTripEventEditor(this._data, this.#isEventNew);
   }
 
   #collapseClickHandler = (evt) => {
@@ -133,11 +136,34 @@ export default class TripEventEditorView extends AbstractView {
 
   #submitFormHandler = (evt) => {
     evt.preventDefault();
-    this._callback.submitForm(this.#tripEvent);
+    this._callback.submitForm(this._data);
   }
 
   setSubmitFormHandler = (callback) => {
     this._callback.submitForm = callback;
     this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
   }
+
+  #changeEventTypeHandler = (evt) => this.updateData({
+    type: evt.target.value,
+    offers: [],
+  });
+
+  #changeEventCityHandler = (evt) => {
+    const newDestination = getDestination(evt.target.value) || {name: evt.target.value};
+    this.updateData({destination: newDestination});
+  };
+
+  #setInnerHandlers = () => {
+    this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
+    this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeEventCityHandler);
+  }
+
+  restoreHandlers = () => {
+    this.#setInnerHandlers();
+    this.setSubmitFormHandler(this._callback.submitForm);
+    this.setCollapseClickHandler(this._callback.collapseClick);
+  }
+
+  reset = (tripEvent) => this.updateData(tripEvent);
 }
