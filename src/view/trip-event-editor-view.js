@@ -1,4 +1,6 @@
 import dayjs from 'dayjs';
+import flatpickr from 'flatpickr';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import {TRIP_CITIES, TripEventType, Offer} from '../utils/const.js';
 import {getDestination} from '../mock/trip-event-destination.js';
 import SmartView from './smart-view.js';
