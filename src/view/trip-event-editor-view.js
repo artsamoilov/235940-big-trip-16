@@ -114,12 +114,16 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers
 
 export default class TripEventEditorView extends SmartView {
   #isEventNew = null;
+  #startDatePicker = null;
+  #endDatePicker = null;
 
   constructor(tripEvent = {}, isEventNew = false) {
     super();
     this._data = tripEvent;
     this.#isEventNew = isEventNew;
     this.#setInnerHandlers();
+    this.#setStartDatePicker();
+    this.#setEndDatePicker();
   }
 
   get template() {
@@ -165,7 +169,43 @@ export default class TripEventEditorView extends SmartView {
     this.#setInnerHandlers();
     this.setSubmitFormHandler(this._callback.submitForm);
     this.setCollapseClickHandler(this._callback.collapseClick);
+    this.#setStartDatePicker();
+    this.#setEndDatePicker();
   }
 
   reset = (tripEvent) => this.updateData(tripEvent);
+
+  removeElement = () => {
+    super.removeElement();
+    this.#startDatePicker.destroy();
+    this.#startDatePicker = null;
+    this.#endDatePicker.destroy();
+    this.#endDatePicker = null;
+  }
+
+  #startDateChangeHandler = (newStartDate) => this.updateData({dateFrom: newStartDate}, true);
+
+  #endDateChangeHandler = (newEndDate) => this.updateData({dateTo: newEndDate}, true);
+
+  #setStartDatePicker = () => {
+    this.#startDatePicker = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        onChange: this.#startDateChangeHandler,
+      }
+    );
+  }
+
+  #setEndDatePicker = () => {
+    this.#endDatePicker = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        onChange: this.#endDateChangeHandler,
+      }
+    );
+  }
 }
