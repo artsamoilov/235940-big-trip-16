@@ -3,7 +3,7 @@ import {TRIP_CITIES, TripEventType, Offer} from '../utils/const.js';
 import {getDestination} from '../mock/trip-event-destination.js';
 import SmartView from './smart-view.js';
 
-const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers, type}, isEventNew) => {
+const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers, type}, offersList, isEventNew) => {
   const startTime = dayjs(dateFrom);
   const endTime = dayjs(dateTo);
 
@@ -30,7 +30,7 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
-          ${Offer.find((offer) => offer.type === type).offers.map(({id, title, price}) =>`<div class="event__offer-selector">
+          ${offersList.find((offer) => offer.type === type).offers.map(({id, title, price}) =>`<div class="event__offer-selector">
             <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" ${getOfferCheckedStatus(id)}>
             <label class="event__offer-label" for="event-offer-${id}">
               <span class="event__offer-title">${title}</span>
@@ -121,7 +121,7 @@ export default class TripEventEditorView extends SmartView {
   }
 
   get template() {
-    return createTripEventEditor(this._data, this.#isEventNew);
+    return createTripEventEditor(this._data, Offer, this.#isEventNew);
   }
 
   #collapseClickHandler = (evt) => {

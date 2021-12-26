@@ -15,10 +15,10 @@ const getPhotos = () => Array.from({length: getPhotoCount()}, (value, index) => 
   description: `Random photo №${index + 1}`,
 }));
 
-export const Destination = TRIP_CITIES.map((city) => ({
+export const destinations = TRIP_CITIES.map((city) => ({
   name: city,
   description: getDescription(),
   pictures: getPhotos()
 }));
 
-export const getDestination = (city) => Destination.find((tripCity) => tripCity.name === city);
+export const getDestination = (city) => destinations.find((tripCity) => tripCity.name === city);

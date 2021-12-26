@@ -2,16 +2,9 @@ import dayjs from 'dayjs';
 import AbstractView from './abstract-view.js';
 
 const createTripInfo = (tripEvents) => {
-  const getTotalPrice = () => {
-    let totalPrice = 0;
-    tripEvents.forEach((tripEvent) => {
-      totalPrice += tripEvent.basePrice;
-      tripEvent.offers.forEach((offer) => {
-        totalPrice += offer.price;
-      });
-    });
-    return totalPrice;
-  };
+  const getTotalPrice = () => tripEvents.reduce((totalPrice, tripEvent) =>
+    totalPrice + tripEvent.basePrice + tripEvent.offers.reduce((totalOffersPrice, offer) =>
+      totalOffersPrice + offer.price, 0), 0);
 
   const getSortedEventsFrom = () => tripEvents.slice().sort((firstEvent, secondEvent) => firstEvent.dateFrom - secondEvent.dateFrom);
 
