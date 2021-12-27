@@ -122,8 +122,7 @@ export default class TripEventEditorView extends SmartView {
     this._data = tripEvent;
     this.#isEventNew = isEventNew;
     this.#setInnerHandlers();
-    this.#setStartDatePicker();
-    this.#setEndDatePicker();
+    this.#setDatePickers();
   }
 
   get template() {
@@ -169,8 +168,7 @@ export default class TripEventEditorView extends SmartView {
     this.#setInnerHandlers();
     this.setSubmitFormHandler(this._callback.submitForm);
     this.setCollapseClickHandler(this._callback.collapseClick);
-    this.#setStartDatePicker();
-    this.#setEndDatePicker();
+    this.#setDatePickers();
   }
 
   reset = (tripEvent) => this.updateData(tripEvent);
@@ -207,5 +205,10 @@ export default class TripEventEditorView extends SmartView {
         onChange: this.#endDateChangeHandler,
       }
     );
+  }
+
+  #setDatePickers = () => {
+    this.#setStartDatePicker();
+    this.#setEndDatePicker();
   }
 }
