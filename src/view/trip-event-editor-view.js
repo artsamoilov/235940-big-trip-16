@@ -1,9 +1,11 @@
 import dayjs from 'dayjs';
+import flatpickr from 'flatpickr';
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import {TRIP_CITIES, TripEventType, Offer} from '../utils/const.js';
 import {getDestination} from '../mock/trip-event-destination.js';
 import SmartView from './smart-view.js';
 
-const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers, type}, isEventNew) => {
+const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers, type}, offersList, isEventNew) => {
   const startTime = dayjs(dateFrom);
   const endTime = dayjs(dateTo);
 
@@ -30,7 +32,7 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
-          ${Offer.find((offer) => offer.type === type).offers.map(({id, title, price}) =>`<div class="event__offer-selector">
+          ${offersList.find((offer) => offer.type === type).offers.map(({id, title, price}) =>`<div class="event__offer-selector">
             <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" ${getOfferCheckedStatus(id)}>
             <label class="event__offer-label" for="event-offer-${id}">
               <span class="event__offer-title">${title}</span>
@@ -112,16 +114,19 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers
 
 export default class TripEventEditorView extends SmartView {
   #isEventNew = null;
+  #startDatePicker = null;
+  #endDatePicker = null;
 
   constructor(tripEvent = {}, isEventNew = false) {
     super();
     this._data = tripEvent;
     this.#isEventNew = isEventNew;
     this.#setInnerHandlers();
+    this.#setDatePickers();
   }
 
   get template() {
-    return createTripEventEditor(this._data, this.#isEventNew);
+    return createTripEventEditor(this._data, Offer, this.#isEventNew);
   }
 
   #collapseClickHandler = (evt) => {
@@ -163,7 +168,47 @@ export default class TripEventEditorView extends SmartView {
     this.#setInnerHandlers();
     this.setSubmitFormHandler(this._callback.submitForm);
     this.setCollapseClickHandler(this._callback.collapseClick);
+    this.#setDatePickers();
   }
 
   reset = (tripEvent) => this.updateData(tripEvent);
+
+  removeElement = () => {
+    super.removeElement();
+    this.#startDatePicker.destroy();
+    this.#startDatePicker = null;
+    this.#endDatePicker.destroy();
+    this.#endDatePicker = null;
+  }
+
+  #startDateChangeHandler = (newStartDate) => this.updateData({dateFrom: newStartDate}, true);
+
+  #endDateChangeHandler = (newEndDate) => this.updateData({dateTo: newEndDate}, true);
+
+  #setStartDatePicker = () => {
+    this.#startDatePicker = flatpickr(
+      this.element.querySelector('#event-start-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        onChange: this.#startDateChangeHandler,
+      }
+    );
+  }
+
+  #setEndDatePicker = () => {
+    this.#endDatePicker = flatpickr(
+      this.element.querySelector('#event-end-time-1'),
+      {
+        enableTime: true,
+        dateFormat: 'd/m/y H:i',
+        onChange: this.#endDateChangeHandler,
+      }
+    );
+  }
+
+  #setDatePickers = () => {
+    this.#setStartDatePicker();
+    this.#setEndDatePicker();
+  }
 }
