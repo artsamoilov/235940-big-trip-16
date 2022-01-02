@@ -9,6 +9,7 @@ import TripEventPresenter from './trip-event-presenter.js';
 
 export default class TripPresenter {
   #tripEventsContainer = null;
+  #tripEventsModel = null;
 
   #tripSortComponent = new TripSortView();
   #tripMessageComponent = new TripMessageView();
@@ -18,8 +19,13 @@ export default class TripPresenter {
   #tripEventPresenter = new Map();
   #currentSortType = SortType.DAY;
 
-  constructor(tripEventsContainer) {
+  constructor(tripEventsContainer, tripEventsModel) {
     this.#tripEventsContainer = tripEventsContainer;
+    this.#tripEventsModel = tripEventsModel;
+  }
+
+  get tripEvents() {
+    return this.#tripEventsModel.tripEvents;
   }
 
   init = (tripEvents) => {
