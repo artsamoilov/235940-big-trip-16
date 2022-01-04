@@ -1,10 +1,10 @@
 import AbstractView from './abstract-view.js';
 import {SortType} from '../utils/const.js';
 
-const createTripSort = () => (
+const createTripSort = (currentSortType) => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
     <div class="trip-sort__item  trip-sort__item--day">
-      <input id="${SortType.DAY}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${SortType.DAY}" checked>
+      <input id="${SortType.DAY}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${SortType.DAY}" ${currentSortType === SortType.DAY ? 'checked' : ''}>
       <label class="trip-sort__btn" for="${SortType.DAY}">Day</label>
     </div>
 
@@ -14,12 +14,12 @@ const createTripSort = () => (
     </div>
 
     <div class="trip-sort__item  trip-sort__item--time">
-      <input id="${SortType.TIME}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${SortType.TIME}">
+      <input id="${SortType.TIME}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${SortType.TIME}" ${currentSortType === SortType.TIME ? 'checked' : ''}>
       <label class="trip-sort__btn" for="${SortType.TIME}">Time</label>
     </div>
 
     <div class="trip-sort__item  trip-sort__item--price">
-      <input id="${SortType.PRICE}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${SortType.PRICE}">
+      <input id="${SortType.PRICE}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="${SortType.PRICE}" ${currentSortType === SortType.PRICE ? 'checked' : ''}>
       <label class="trip-sort__btn" for="${SortType.PRICE}">Price</label>
     </div>
 
@@ -31,8 +31,15 @@ const createTripSort = () => (
 );
 
 export default class TripSortView extends AbstractView {
+  #currentSortType = null;
+
+  constructor(currentSortType) {
+    super();
+    this.#currentSortType = currentSortType;
+  }
+
   get template() {
-    return createTripSort();
+    return createTripSort(this.#currentSortType);
   }
 
   setSortTypeChangeHandler = (callback) => {

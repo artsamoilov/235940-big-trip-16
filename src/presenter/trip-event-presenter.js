@@ -1,4 +1,5 @@
 import {render, replace, remove, RenderPosition} from '../utils/render.js';
+import {UpdateType, UserAction} from '../utils/const.js';
 import TripEventView from '../view/trip-event-view.js';
 import TripEventEditorView from '../view/trip-event-editor-view.js';
 
@@ -89,7 +90,11 @@ export default class TripEventPresenter {
     }
   };
 
-  #handleFavoriteClick = () => this.#changeData({...this.#tripEvent, isFavorite: !this.#tripEvent.isFavorite});
+  #handleFavoriteClick = () => this.#changeData(
+    UserAction.UPDATE_TRIP_EVENT,
+    UpdateType.PATCH,
+    {...this.#tripEvent, isFavorite: !this.#tripEvent.isFavorite},
+  );
 
   #handleExpandClick = () => this.#switchEventToEditor();
 
@@ -99,7 +104,12 @@ export default class TripEventPresenter {
   }
 
   #handleFormSubmit = (tripEvent) => {
-    this.#changeData(tripEvent);
+    this.#changeData(
+      UserAction.UPDATE_TRIP_EVENT,
+      UpdateType.MAJOR,
+      tripEvent,
+    );
+
     this.#switchEditorToEvent();
   }
 }

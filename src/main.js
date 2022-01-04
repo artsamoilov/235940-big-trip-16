@@ -26,4 +26,4 @@ if (TRIP_EVENTS_COUNTER > 0) {
   render(tripMainContainer, new TripInfoView(tripEvents), RenderPosition.AFTERBEGIN);
 }
 
-tripPresenter.init(tripEvents);
+tripPresenter.init();
