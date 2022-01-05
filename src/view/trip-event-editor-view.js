@@ -149,6 +149,16 @@ export default class TripEventEditorView extends SmartView {
     this.element.querySelector('form').addEventListener('submit', this.#submitFormHandler);
   }
 
+  #deleteFormHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.deleteForm(this._data);
+  }
+
+  setDeleteFormHandler = (callback) => {
+    this._callback.deleteForm = callback;
+    this.element.querySelector('form').addEventListener('reset', this.#deleteFormHandler);
+  }
+
   #changeEventTypeHandler = (evt) => this.updateData({
     type: evt.target.value,
     offers: [],
@@ -167,6 +177,7 @@ export default class TripEventEditorView extends SmartView {
   restoreHandlers = () => {
     this.#setInnerHandlers();
     this.setSubmitFormHandler(this._callback.submitForm);
+    this.setDeleteFormHandler(this._callback.deleteForm);
     this.setCollapseClickHandler(this._callback.collapseClick);
     this.#setDatePickers();
   }
