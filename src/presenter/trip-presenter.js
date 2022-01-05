@@ -1,5 +1,5 @@
 import {remove, render, RenderPosition} from '../utils/render.js';
-import {SortType, UpdateType, UserAction} from '../utils/const.js';
+import {SortType, UpdateType, UserAction, FilterType} from '../utils/const.js';
 import {sortTripEventsByDay, sortTripEventsByTime, sortTripEventsByPrice} from '../utils/sort.js';
 import {filter} from '../utils/filter.js';
 import TripSortView from '../view/trip-sort-view.js';
@@ -13,11 +13,12 @@ export default class TripPresenter {
   #filterModel = null;
 
   #tripSortComponent = null;
-  #tripMessageComponent = new TripMessageView();
+  #tripMessageComponent = null;
   #tripEventsListComponent = new TripEventsListView();
 
   #tripEventPresenter = new Map();
   #currentSortType = SortType.DAY;
+  #filterType = FilterType.EVERYTHING;
 
   constructor(tripEventsContainer, tripEventsModel, filterModel) {
     this.#tripEventsContainer = tripEventsContainer;
@@ -29,9 +30,9 @@ export default class TripPresenter {
   }
 
   get tripEvents() {
-    const filterType = this.#filterModel.filter;
+    this.#filterType = this.#filterModel.filter;
     const tripEvents = this.#tripEventsModel.tripEvents;
-    const filteredTripEvents = filter[filterType](tripEvents);
+    const filteredTripEvents = filter[this.#filterType](tripEvents);
 
     switch (this.#currentSortType) {
       case SortType.TIME:
@@ -100,7 +101,10 @@ export default class TripPresenter {
     this.tripEvents.forEach((tripEvent) => this.#renderTripEvent(tripEvent));
   }
 
-  #renderTripMessage = () => render(this.#tripEventsContainer, this.#tripMessageComponent, RenderPosition.BEFOREEND);
+  #renderTripMessage = () => {
+    this.#tripMessageComponent = new TripMessageView(this.#filterType);
+    render(this.#tripEventsContainer, this.#tripMessageComponent, RenderPosition.BEFOREEND);
+  }
 
   #renderTrip = () => {
     if (this.tripEvents.length === 0) {
@@ -117,7 +121,10 @@ export default class TripPresenter {
     this.#tripEventPresenter.clear();
 
     remove(this.#tripSortComponent);
-    remove(this.#tripMessageComponent);
+
+    if (this.#tripMessageComponent) {
+      remove(this.#tripMessageComponent);
+    }
 
     if (resetSortType) {
       this.#currentSortType = SortType.DAY;
