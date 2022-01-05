@@ -1,6 +1,7 @@
 import {remove, render, RenderPosition} from '../utils/render.js';
 import {SortType, UpdateType, UserAction} from '../utils/const.js';
 import {sortTripEventsByDay, sortTripEventsByTime, sortTripEventsByPrice} from '../utils/sort.js';
+import {filter} from '../utils/filter.js';
 import TripSortView from '../view/trip-sort-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import TripMessageView from '../view/trip-message-view.js';
@@ -9,6 +10,7 @@ import TripEventPresenter from './trip-event-presenter.js';
 export default class TripPresenter {
   #tripEventsContainer = null;
   #tripEventsModel = null;
+  #filterModel = null;
 
   #tripSortComponent = null;
   #tripMessageComponent = new TripMessageView();
@@ -17,21 +19,27 @@ export default class TripPresenter {
   #tripEventPresenter = new Map();
   #currentSortType = SortType.DAY;
 
-  constructor(tripEventsContainer, tripEventsModel) {
+  constructor(tripEventsContainer, tripEventsModel, filterModel) {
     this.#tripEventsContainer = tripEventsContainer;
     this.#tripEventsModel = tripEventsModel;
+    this.#filterModel = filterModel;
 
     this.#tripEventsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get tripEvents() {
+    const filterType = this.#filterModel.filter;
+    const tripEvents = this.#tripEventsModel.tripEvents;
+    const filteredTripEvents = filter[filterType](tripEvents);
+
     switch (this.#currentSortType) {
       case SortType.TIME:
-        return [...this.#tripEventsModel.tripEvents].sort(sortTripEventsByTime);
+        return filteredTripEvents.sort(sortTripEventsByTime);
       case SortType.PRICE:
-        return [...this.#tripEventsModel.tripEvents].sort(sortTripEventsByPrice);
+        return filteredTripEvents.sort(sortTripEventsByPrice);
       default:
-        return [...this.#tripEventsModel.tripEvents].sort(sortTripEventsByDay);
+        return filteredTripEvents.sort(sortTripEventsByDay);
     }
   }
 
