@@ -32,3 +32,8 @@ if (TRIP_EVENTS_COUNTER > 0) {
 
 filterPresenter.init();
 tripPresenter.init();
+
+document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
+  evt.preventDefault();
+  tripPresenter.createTripEvent();
+});

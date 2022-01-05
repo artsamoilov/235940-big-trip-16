@@ -5,7 +5,7 @@ import {TRIP_CITIES, TripEventType, Offer} from '../utils/const.js';
 import {getDestination} from '../mock/trip-event-destination.js';
 import SmartView from './smart-view.js';
 
-const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers, type}, offersList, isEventNew) => {
+const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination = {}, offers = [], type} = {}, offersList, isEventNew) => {
   const startTime = dayjs(dateFrom);
   const endTime = dayjs(dateTo);
 
@@ -28,18 +28,22 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers
 
   const getOfferCheckedStatus = (id) => offers.some((offer) => offer.id === id) ? 'checked' : '';
 
+  const getOffers = () => `${offersList.find((offer) => offer.type === type).offers.map(({id, title, price}) =>
+    `<div class="event__offer-selector">
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" ${getOfferCheckedStatus(id)}>
+      <label class="event__offer-label" for="event-offer-${id}">
+        <span class="event__offer-title">${title}</span>
+        &plus;&euro;&nbsp;
+        <span class="event__offer-price">${price}</span>
+      </label>
+    </div>`)
+    .join('')}`;
+
   const getOffersList = () =>
     `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
         <div class="event__available-offers">
-          ${offersList.find((offer) => offer.type === type).offers.map(({id, title, price}) =>`<div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" ${getOfferCheckedStatus(id)}>
-            <label class="event__offer-label" for="event-offer-${id}">
-              <span class="event__offer-title">${title}</span>
-              &plus;&euro;&nbsp;
-              <span class="event__offer-price">${price}</span>
-            </label>
-          </div>`).join('')}
+          ${getOffers()}
         </div>
     </section>`;
 
@@ -79,7 +83,7 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers
           <label class="event__label  event__type-output" for="event-destination-1">
             ${type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name ? destination.name : ''}" list="destination-list-1">
           <datalist id="destination-list-1">
             ${getDestinationList()}
           </datalist>
@@ -87,10 +91,10 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${startTime.format('DD/MM/YY HH:mm')}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFrom ? startTime.format('DD/MM/YY HH:mm') : ''}">
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${endTime.format('DD/MM/YY HH:mm')}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTo ? endTime.format('DD/MM/YY HH:mm') : ''}">
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -98,7 +102,7 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination, offers
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice}">
+          <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${basePrice ? basePrice : ''}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -178,8 +182,11 @@ export default class TripEventEditorView extends SmartView {
     this.#setInnerHandlers();
     this.setSubmitFormHandler(this._callback.submitForm);
     this.setDeleteFormHandler(this._callback.deleteForm);
-    this.setCollapseClickHandler(this._callback.collapseClick);
     this.#setDatePickers();
+
+    if (!this.#isEventNew) {
+      this.setCollapseClickHandler(this._callback.collapseClick);
+    }
   }
 
   reset = (tripEvent) => this.updateData(tripEvent);

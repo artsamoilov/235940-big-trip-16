@@ -6,6 +6,7 @@ import TripSortView from '../view/trip-sort-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import TripMessageView from '../view/trip-message-view.js';
 import TripEventPresenter from './trip-event-presenter.js';
+import NewTripEventPresenter from './new-trip-event-presenter.js';
 
 export default class TripPresenter {
   #tripEventsContainer = null;
@@ -17,6 +18,7 @@ export default class TripPresenter {
   #tripEventsListComponent = new TripEventsListView();
 
   #tripEventPresenter = new Map();
+  #newTripEventPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
 
@@ -24,6 +26,8 @@ export default class TripPresenter {
     this.#tripEventsContainer = tripEventsContainer;
     this.#tripEventsModel = tripEventsModel;
     this.#filterModel = filterModel;
+
+    this.#newTripEventPresenter = new NewTripEventPresenter(this.#tripEventsListComponent, this.#handleViewAction);
 
     this.#tripEventsModel.addObserver(this.#handleModelEvent);
     this.#filterModel.addObserver(this.#handleModelEvent);
@@ -46,6 +50,12 @@ export default class TripPresenter {
 
   init = () => this.#renderTrip();
 
+  createTripEvent = () => {
+    this.#currentSortType = SortType.DAY;
+    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#newTripEventPresenter.init();
+  }
+
   #handleSortTypeChange = (sortType) => {
     this.#currentSortType = sortType;
     this.#clearTrip();
@@ -58,7 +68,10 @@ export default class TripPresenter {
     render(this.#tripEventsContainer, this.#tripSortComponent, RenderPosition.BEFOREEND);
   }
 
-  #handleModeChange = () => this.#tripEventPresenter.forEach((presenter) => presenter.resetView());
+  #handleModeChange = () => {
+    this.#newTripEventPresenter.destroy();
+    this.#tripEventPresenter.forEach((presenter) => presenter.resetView());
+  }
 
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
@@ -117,6 +130,7 @@ export default class TripPresenter {
   }
 
   #clearTrip = (resetSortType = false) => {
+    this.#newTripEventPresenter.destroy();
     this.#tripEventPresenter.forEach((presenter) => presenter.destroy());
     this.#tripEventPresenter.clear();
 
