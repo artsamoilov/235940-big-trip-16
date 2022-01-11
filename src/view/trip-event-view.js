@@ -39,7 +39,7 @@ const createTripEvent = ({basePrice, dateFrom, dateTo, destination, isFavorite, 
         <p class="event__duration">${getTimeDifference()}</p>
       </div>
       <p class="event__price">
-        &euro;&nbsp;<span class="event__price-value">${he.encode(String(basePrice))}</span>
+        &euro;&nbsp;<span class="event__price-value">${basePrice}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       ${offers ? `<ul class="event__selected-offers">${getOffers()}</ul>` : ''}

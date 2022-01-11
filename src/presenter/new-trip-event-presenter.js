@@ -7,13 +7,16 @@ export default class NewTripEventPresenter {
   #tripEventsListComponent = null;
   #changeData = null;
   #tripEventEditorComponent = null;
+  #destroyCallback = null;
 
   constructor(tripEventsListComponent, changeData) {
     this.#tripEventsListComponent = tripEventsListComponent;
     this.#changeData = changeData;
   }
 
-  init = () => {
+  init = (callback) => {
+    this.#destroyCallback = callback;
+
     if (this.#tripEventEditorComponent !== null) {
       return;
     }
@@ -31,6 +34,8 @@ export default class NewTripEventPresenter {
     if (this.#tripEventEditorComponent === null) {
       return;
     }
+
+    this.#destroyCallback?.();
 
     remove(this.#tripEventEditorComponent);
     this.#tripEventEditorComponent = null;

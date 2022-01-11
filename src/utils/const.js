@@ -302,3 +302,9 @@ export const FilterType = {
   FUTURE: 'FUTURE',
   PAST: 'PAST',
 };
+
+export const MenuItem = {
+  NEW_EVENT: 'NEW_EVENT',
+  TABLE: 'TABLE',
+  STATS: 'STATS',
+};

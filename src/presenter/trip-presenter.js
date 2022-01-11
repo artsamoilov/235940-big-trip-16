@@ -28,9 +28,6 @@ export default class TripPresenter {
     this.#filterModel = filterModel;
 
     this.#newTripEventPresenter = new NewTripEventPresenter(this.#tripEventsListComponent, this.#handleViewAction);
-
-    this.#tripEventsModel.addObserver(this.#handleModelEvent);
-    this.#filterModel.addObserver(this.#handleModelEvent);
   }
 
   get tripEvents() {
@@ -48,12 +45,25 @@ export default class TripPresenter {
     }
   }
 
-  init = () => this.#renderTrip();
+  init = () => {
+    this.#tripEventsModel.addObserver(this.#handleModelEvent);
+    this.#filterModel.addObserver(this.#handleModelEvent);
 
-  createTripEvent = () => {
+    this.#renderTrip();
+  }
+
+  destroy = () => {
+    this.#clearTrip(true);
+
+    remove(this.#tripEventsListComponent);
+
+    this.#tripEventsModel.removeObserver(this.#handleModelEvent);
+    this.#filterModel.removeObserver(this.#handleModelEvent);
+  }
+
+  createTripEvent = (callback) => {
     this.#currentSortType = SortType.DAY;
-    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this.#newTripEventPresenter.init();
+    this.#newTripEventPresenter.init(callback);
   }
 
   #handleSortTypeChange = (sortType) => {
