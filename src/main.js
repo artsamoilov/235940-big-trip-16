@@ -57,21 +57,25 @@ const handleTabsClick = (tabItem) => {
       document.querySelector('.trip-main__event-add-btn').disabled = true;
       break;
     case MenuItem.TABLE:
-      remove(statisticsComponent);
-      filterPresenter.init();
-      tripPresenter.init();
-      statsTabElement.classList.remove('trip-tabs__btn--active');
-      tableTabElement.classList.add('trip-tabs__btn--active');
-      tripEventsContainer.classList.remove('trip-events--hidden');
+      if (!tableTabElement.classList.contains('trip-tabs__btn--active')) {
+        remove(statisticsComponent);
+        filterPresenter.init();
+        tripPresenter.init();
+        statsTabElement.classList.remove('trip-tabs__btn--active');
+        tableTabElement.classList.add('trip-tabs__btn--active');
+        tripEventsContainer.classList.remove('trip-events--hidden');
+      }
       break;
     case MenuItem.STATS:
-      filterPresenter.destroy();
-      tripPresenter.destroy();
-      statisticsComponent = new TripStatisticsView(tripEventsModel.tripEvents);
-      tripEventsContainer.classList.add('trip-events--hidden');
-      tableTabElement.classList.remove('trip-tabs__btn--active');
-      statsTabElement.classList.add('trip-tabs__btn--active');
-      render(tripEventsContainer, statisticsComponent, RenderPosition.AFTEREND);
+      if (!statsTabElement.classList.contains('trip-tabs__btn--active')) {
+        filterPresenter.destroy();
+        tripPresenter.destroy();
+        statisticsComponent = new TripStatisticsView(tripEventsModel.tripEvents);
+        tripEventsContainer.classList.add('trip-events--hidden');
+        tableTabElement.classList.remove('trip-tabs__btn--active');
+        statsTabElement.classList.add('trip-tabs__btn--active');
+        render(tripEventsContainer, statisticsComponent, RenderPosition.AFTEREND);
+      }
       break;
   }
 };
