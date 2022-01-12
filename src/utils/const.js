@@ -284,3 +284,27 @@ export const Offer = [
     ]
   },
 ];
+
+export const UserAction = {
+  UPDATE_TRIP_EVENT: 'UPDATE_TRIP_EVENT',
+  ADD_TRIP_EVENT: 'ADD_TRIP_EVENT',
+  DELETE_TRIP_EVENT: 'DELETE_TRIP_EVENT',
+};
+
+export const UpdateType = {
+  PATCH: 'PATCH',
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+};
+
+export const FilterType = {
+  EVERYTHING: 'EVERYTHING',
+  FUTURE: 'FUTURE',
+  PAST: 'PAST',
+};
+
+export const MenuItem = {
+  NEW_EVENT: 'NEW_EVENT',
+  TABLE: 'TABLE',
+  STATS: 'STATS',
+};

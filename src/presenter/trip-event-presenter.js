@@ -1,4 +1,6 @@
 import {render, replace, remove, RenderPosition} from '../utils/render.js';
+import {UpdateType, UserAction} from '../utils/const.js';
+import {isOnlyTypeChanged} from '../utils/trip-event.js';
 import TripEventView from '../view/trip-event-view.js';
 import TripEventEditorView from '../view/trip-event-editor-view.js';
 
@@ -37,6 +39,7 @@ export default class TripEventPresenter {
     this.#tripEventComponent.setExpandClickHandler(this.#handleExpandClick);
     this.#tripEventEditorComponent.setCollapseClickHandler(this.#handleCollapseClick);
     this.#tripEventEditorComponent.setSubmitFormHandler(this.#handleFormSubmit);
+    this.#tripEventEditorComponent.setDeleteFormHandler(this.#handleFormDelete);
 
     if (existingTripEventComponent === null || existingTripEventEditorComponent === null) {
       render (this.#tripEventsListComponent, this.#tripEventComponent, RenderPosition.BEFOREEND);
@@ -89,7 +92,11 @@ export default class TripEventPresenter {
     }
   };
 
-  #handleFavoriteClick = () => this.#changeData({...this.#tripEvent, isFavorite: !this.#tripEvent.isFavorite});
+  #handleFavoriteClick = () => this.#changeData(
+    UserAction.UPDATE_TRIP_EVENT,
+    UpdateType.PATCH,
+    {...this.#tripEvent, isFavorite: !this.#tripEvent.isFavorite},
+  );
 
   #handleExpandClick = () => this.#switchEventToEditor();
 
@@ -98,8 +105,23 @@ export default class TripEventPresenter {
     this.#switchEditorToEvent();
   }
 
-  #handleFormSubmit = (tripEvent) => {
-    this.#changeData(tripEvent);
+  #handleFormSubmit = (update) => {
+    const isPatchUpdate = isOnlyTypeChanged(this.#tripEvent, update);
+
+    this.#changeData(
+      UserAction.UPDATE_TRIP_EVENT,
+      isPatchUpdate ? UpdateType.PATCH : UpdateType.MAJOR,
+      update,
+    );
+
     this.#switchEditorToEvent();
+  }
+
+  #handleFormDelete = (tripEvent) => {
+    this.#changeData(
+      UserAction.DELETE_TRIP_EVENT,
+      UpdateType.MAJOR,
+      tripEvent,
+    );
   }
 }
