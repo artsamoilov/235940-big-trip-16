@@ -2,6 +2,15 @@ import AbstractObservable from '../utils/abstract-observable.js';
 
 export default class TripEventsModel extends AbstractObservable {
   #tripEvents = [];
+  #apiService = null;
+
+  constructor(apiService) {
+    super();
+    this.#apiService = apiService;
+    this.#apiService.tripEvents.then((tripEvents) => {
+      console.log(tripEvents.map(this.#adaptToClient));
+    });
+  }
 
   set tripEvents(tripEvents) {
     this.#tripEvents = tripEvents;
@@ -49,5 +58,21 @@ export default class TripEventsModel extends AbstractObservable {
     ];
 
     this._notify(updateType, update);
+  }
+
+  #adaptToClient = (tripEvent) => {
+    const adaptedTripEvent = {...tripEvent,
+      basePrice: tripEvent['base_price'],
+      dateFrom: tripEvent['date_from'],
+      dateTo: tripEvent['date_to'],
+      isFavorite: tripEvent['is_favorite'],
+    };
+
+    delete adaptedTripEvent['base_price'];
+    delete adaptedTripEvent['date_from'];
+    delete adaptedTripEvent['date_to'];
+    delete adaptedTripEvent['is_favorite'];
+
+    return adaptedTripEvent;
   }
 }
