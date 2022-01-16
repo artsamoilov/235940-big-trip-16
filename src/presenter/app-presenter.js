@@ -1,7 +1,6 @@
 import {MenuItem} from '../utils/const.js';
 import {remove, render, RenderPosition} from '../utils/render.js';
 import TripTabsView from '../view/trip-tabs-view.js';
-import TripInfoView from '../view/trip-info-view.js';
 import TripStatisticsView from '../view/trip-statistics-view.js';
 import TripPresenter from './trip-presenter.js';
 import FilterPresenter from './filter-presenter.js';
@@ -31,12 +30,8 @@ export default class AppPresenter {
   init = () => {
     render(tripTabsContainer, this.#tripTabsView, RenderPosition.BEFOREEND);
 
-    this.#tripPresenter = new TripPresenter(tripEventsContainer, this.#tripEventsModel, this.#filterModel);
+    this.#tripPresenter = new TripPresenter(tripMainContainer, tripEventsContainer, this.#tripEventsModel, this.#filterModel);
     this.#filterPresenter = new FilterPresenter(tripFiltersContainer, this.#filterModel);
-
-    if (this.#tripEventsModel.tripEvents.length > 0) {
-      render(tripMainContainer, new TripInfoView(this.#tripEventsModel.tripEvents), RenderPosition.AFTERBEGIN);
-    }
 
     newEventButton.addEventListener('click', (evt) => {
       evt.preventDefault();

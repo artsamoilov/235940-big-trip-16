@@ -21,7 +21,7 @@ export default class NewTripEventPresenter {
       return;
     }
 
-    this.#tripEventEditorComponent = new TripEventEditorView({type: 'flight'}, true);
+    this.#tripEventEditorComponent = new TripEventEditorView({type: 'flight', offers: []}, true);
     this.#tripEventEditorComponent.setSubmitFormHandler(this.#handleFormSubmit);
     this.#tripEventEditorComponent.setDeleteFormHandler(this.#handleFormDelete);
 

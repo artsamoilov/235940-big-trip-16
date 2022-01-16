@@ -1,4 +1,5 @@
 import AbstractObservable from '../utils/abstract-observable.js';
+import {UpdateType} from '../utils/const.js';
 
 export default class TripEventsModel extends AbstractObservable {
   #tripEvents = [];
@@ -7,17 +8,21 @@ export default class TripEventsModel extends AbstractObservable {
   constructor(apiService) {
     super();
     this.#apiService = apiService;
-    this.#apiService.tripEvents.then((tripEvents) => {
-      console.log(tripEvents.map(this.#adaptToClient));
-    });
-  }
-
-  set tripEvents(tripEvents) {
-    this.#tripEvents = tripEvents;
   }
 
   get tripEvents() {
     return this.#tripEvents;
+  }
+
+  init = async () => {
+    try {
+      const tripEvents = await this.#apiService.tripEvents;
+      this.#tripEvents = tripEvents.map(this.#adaptToClient);
+    } catch (err) {
+      this.#tripEvents = [];
+    }
+
+    this._notify(UpdateType.INIT);
   }
 
   updateTripEvent = (updateType, update) => {

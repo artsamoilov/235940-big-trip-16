@@ -5,24 +5,31 @@ import {filter} from '../utils/filter.js';
 import TripSortView from '../view/trip-sort-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import TripMessageView from '../view/trip-message-view.js';
+import TripLoadingView from '../view/trip-loading-view.js';
+import TripInfoView from '../view/trip-info-view.js';
 import TripEventPresenter from './trip-event-presenter.js';
 import NewTripEventPresenter from './new-trip-event-presenter.js';
 
 export default class TripPresenter {
+  #tripMainContainer = null;
   #tripEventsContainer = null;
   #tripEventsModel = null;
   #filterModel = null;
 
   #tripSortComponent = null;
   #tripMessageComponent = null;
+  #tripInfoComponent = null;
+  #tripLoadingComponent = new TripLoadingView();
   #tripEventsListComponent = new TripEventsListView();
 
   #tripEventPresenter = new Map();
   #newTripEventPresenter = null;
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
+  #isLoading = true;
 
-  constructor(tripEventsContainer, tripEventsModel, filterModel) {
+  constructor(tripMainContainer, tripEventsContainer, tripEventsModel, filterModel) {
+    this.#tripMainContainer = tripMainContainer;
     this.#tripEventsContainer = tripEventsContainer;
     this.#tripEventsModel = tripEventsModel;
     this.#filterModel = filterModel;
@@ -110,7 +117,17 @@ export default class TripPresenter {
       case UpdateType.PATCH:
         this.#tripEventPresenter.get(data.id).init(data);
         break;
+      case UpdateType.INIT:
+        this.#isLoading = false;
+        remove(this.#tripLoadingComponent);
+        this.#renderTrip();
+        break;
     }
+  }
+
+  #renderTripInfo = () => {
+    this.#tripInfoComponent = new TripInfoView(this.#tripEventsModel.tripEvents);
+    render(this.#tripMainContainer, this.#tripInfoComponent, RenderPosition.AFTERBEGIN);
   }
 
   #renderTripEvent = (tripEvent) => {
@@ -124,17 +141,25 @@ export default class TripPresenter {
     this.tripEvents.forEach((tripEvent) => this.#renderTripEvent(tripEvent));
   }
 
+  #renderLoadingMessage = () => render(this.#tripEventsContainer, this.#tripLoadingComponent, RenderPosition.BEFOREEND)
+
   #renderTripMessage = () => {
     this.#tripMessageComponent = new TripMessageView(this.#filterType);
     render(this.#tripEventsContainer, this.#tripMessageComponent, RenderPosition.BEFOREEND);
   }
 
   #renderTrip = () => {
+    if (this.#isLoading) {
+      this.#renderLoadingMessage();
+      return;
+    }
+
     if (this.tripEvents.length === 0) {
       this.#renderTripMessage();
       return;
     }
 
+    this.#renderTripInfo();
     this.#renderTripSort();
     this.#renderTripEventsList();
   }
@@ -144,7 +169,9 @@ export default class TripPresenter {
     this.#tripEventPresenter.forEach((presenter) => presenter.destroy());
     this.#tripEventPresenter.clear();
 
+    remove(this.#tripInfoComponent);
     remove(this.#tripSortComponent);
+    remove(this.#tripLoadingComponent);
 
     if (this.#tripMessageComponent) {
       remove(this.#tripMessageComponent);

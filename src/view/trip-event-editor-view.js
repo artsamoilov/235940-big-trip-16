@@ -103,7 +103,7 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination = {}, o
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice ? basePrice : ''}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" min="0" value="${basePrice ? basePrice : 0}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -174,7 +174,12 @@ export default class TripEventEditorView extends SmartView {
     this.updateData({destination: newDestination});
   };
 
+  #changeEventPriceHandler = (evt) => {
+    this.updateData({basePrice: Number(evt.target.value)}, true);
+  }
+
   #setInnerHandlers = () => {
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#changeEventPriceHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeEventCityHandler);
   }
