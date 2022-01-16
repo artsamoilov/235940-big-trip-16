@@ -51,8 +51,8 @@ export default class ApiService {
   #adaptToServer = (tripEvent) => {
     const adaptedTripEvent = {...tripEvent,
       'base_price': tripEvent.basePrice,
-      'date_from': tripEvent.dateFrom.toISOString(),
-      'date_to': tripEvent.dateTo.toISOString(),
+      'date_from': tripEvent.dateFrom,
+      'date_to': tripEvent.dateTo,
       'is_favorite': tripEvent.isFavorite,
     };
 
