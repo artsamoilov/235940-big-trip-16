@@ -16,6 +16,7 @@ export default class TripPresenter {
 
   #tripEventsModel = null;
   #destinationsModel = null;
+  #offersModel = null;
   #filterModel = null;
 
   #tripSortComponent = null;
@@ -30,15 +31,16 @@ export default class TripPresenter {
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
 
-  constructor(tripMainContainer, tripEventsContainer, tripEventsModel, destinationsModel, filterModel) {
+  constructor(tripMainContainer, tripEventsContainer, tripEventsModel, destinationsModel, offersModel, filterModel) {
     this.#tripEventsModel = tripEventsModel;
     this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
     this.#filterModel = filterModel;
 
     this.#tripMainContainer = tripMainContainer;
     this.#tripEventsContainer = tripEventsContainer;
 
-    this.#newTripEventPresenter = new NewTripEventPresenter(this.#destinationsModel, this.#tripEventsListComponent, this.#handleViewAction);
+    this.#newTripEventPresenter = new NewTripEventPresenter(this.#destinationsModel, this.#offersModel, this.#tripEventsListComponent, this.#handleViewAction);
   }
 
   get tripEvents() {
@@ -135,7 +137,7 @@ export default class TripPresenter {
   }
 
   #renderTripEvent = (tripEvent) => {
-    const tripEventPresenter = new TripEventPresenter(this.#destinationsModel, this.#tripEventsListComponent, this.#handleViewAction, this.#handleModeChange);
+    const tripEventPresenter = new TripEventPresenter(this.#destinationsModel, this.#offersModel, this.#tripEventsListComponent, this.#handleViewAction, this.#handleModeChange);
     tripEventPresenter.init(tripEvent);
     this.#tripEventPresenter.set(tripEvent.id, tripEventPresenter);
   }

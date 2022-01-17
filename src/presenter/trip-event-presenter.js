@@ -15,6 +15,7 @@ export default class TripEventPresenter {
   #changeMode = null;
 
   #destinationsModel = null;
+  #offersModel = null;
 
   #tripEventComponent = null;
   #tripEventEditorComponent = null;
@@ -22,8 +23,9 @@ export default class TripEventPresenter {
   #tripEvent = null;
   #mode = Mode.DEFAULT;
 
-  constructor(destinationsModel, tripEventsListComponent, changeData, changeMode) {
+  constructor(destinationsModel, offersModel, tripEventsListComponent, changeData, changeMode) {
     this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
     this.#tripEventsListComponent = tripEventsListComponent;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
@@ -36,7 +38,7 @@ export default class TripEventPresenter {
     const existingTripEventEditorComponent = this.#tripEventEditorComponent;
 
     this.#tripEventComponent = new TripEventView(tripEvent);
-    this.#tripEventEditorComponent = new TripEventEditorView(this.#destinationsModel.destinations, tripEvent);
+    this.#tripEventEditorComponent = new TripEventEditorView(this.#destinationsModel.destinations, this.#offersModel.offersList, tripEvent);
 
     this.#tripEventComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#tripEventComponent.setExpandClickHandler(this.#handleExpandClick);

@@ -2,10 +2,10 @@ import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import he from 'he';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
-import {TripEventType, Offer} from '../utils/const.js';
+import {TripEventType} from '../utils/const.js';
 import SmartView from './smart-view.js';
 
-const createTripEventEditor = (destinations = [], {basePrice, dateFrom, dateTo, destination = {}, offers = [], type} = {}, offersList, isEventNew) => {
+const createTripEventEditor = (destinations = [], offersList = [], {basePrice, dateFrom, dateTo, destination = {}, offers = [], type} = {}, isEventNew) => {
   const startTime = dayjs(dateFrom);
   const endTime = dayjs(dateTo);
 
@@ -121,10 +121,12 @@ export default class TripEventEditorView extends SmartView {
   #startDatePicker = null;
   #endDatePicker = null;
   #destinations = null;
+  #offersList = null;
 
-  constructor(destinations, tripEvent = {}, isEventNew = false) {
+  constructor(destinations = [], offersList = [], tripEvent = {}, isEventNew = false) {
     super();
     this.#destinations = destinations;
+    this.#offersList = offersList;
     this._data = tripEvent;
     this.#isEventNew = isEventNew;
     this.#setInnerHandlers();
@@ -132,7 +134,7 @@ export default class TripEventEditorView extends SmartView {
   }
 
   get template() {
-    return createTripEventEditor(this.#destinations, this._data, Offer, this.#isEventNew);
+    return createTripEventEditor(this.#destinations, this.#offersList, this._data, this.#isEventNew);
   }
 
   #collapseClickHandler = (evt) => {

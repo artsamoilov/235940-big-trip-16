@@ -6,11 +6,9 @@ export default class OffersModel {
     this.#apiService = apiService;
   }
 
-  get offers() {
+  get offersList() {
     return this.#offers;
   }
-
-  getOffersByType = (tripEventType) => this.#offers.find((offer) => offer.type === tripEventType).offers;
 
   init = async () => {
     try {

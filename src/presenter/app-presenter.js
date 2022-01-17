@@ -32,7 +32,7 @@ export default class AppPresenter {
   }
 
   init = () => {
-    this.#tripPresenter = new TripPresenter(tripMainContainer, tripEventsContainer, this.#tripEventsModel, this.#destinationsModel, this.#filterModel);
+    this.#tripPresenter = new TripPresenter(tripMainContainer, tripEventsContainer, this.#tripEventsModel, this.#destinationsModel, this.#offersModel, this.#filterModel);
     this.#filterPresenter = new FilterPresenter(tripFiltersContainer, this.#filterModel);
 
     newEventButton.addEventListener('click', (evt) => {
