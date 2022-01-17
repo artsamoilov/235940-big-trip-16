@@ -13,6 +13,8 @@ const tripEventsContainer = document.querySelector('.trip-events');
 
 export default class AppPresenter {
   #tripEventsModel = null;
+  #destinationsModel = null;
+  #offersModel = null;
   #filterModel = null;
 
   #tripTabsView = new TripTabsView();
@@ -22,8 +24,10 @@ export default class AppPresenter {
 
   #statisticsComponent = null;
 
-  constructor(tripEventsModel, filterModel) {
+  constructor(tripEventsModel, destinationsModel, offersModel, filterModel) {
     this.#tripEventsModel = tripEventsModel;
+    this.#destinationsModel = destinationsModel;
+    this.#offersModel = offersModel;
     this.#filterModel = filterModel;
   }
 

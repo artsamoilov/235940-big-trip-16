@@ -16,6 +16,14 @@ export default class ApiService {
     return this.#load({url: 'points'}).then(ApiService.parseResponse);
   }
 
+  get destinations() {
+    return this.#load({url: 'destinations'}).then(ApiService.parseResponse);
+  }
+
+  get offers() {
+    return this.#load({url: 'offers'}).then(ApiService.parseResponse);
+  }
+
   #load = async ({
     url,
     method = Method.GET,
