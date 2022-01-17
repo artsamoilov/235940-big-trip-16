@@ -6,7 +6,7 @@ import TripPresenter from './trip-presenter.js';
 import FilterPresenter from './filter-presenter.js';
 
 const tripMainContainer = document.querySelector('.trip-main');
-const newEventButton = tripMainContainer.querySelector('.trip-main__event-add-btn');
+const newEventButton = document.querySelector('.trip-main__event-add-btn');
 const tripTabsContainer = document.querySelector('.trip-controls__navigation');
 const tripFiltersContainer = document.querySelector('.trip-controls__filters');
 const tripEventsContainer = document.querySelector('.trip-events');
@@ -25,16 +25,14 @@ export default class AppPresenter {
   #statisticsComponent = null;
 
   constructor(tripEventsModel, destinationsModel, offersModel, filterModel) {
-    this.#tripEventsModel = tripEventsModel;
     this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
     this.#filterModel = filterModel;
+    this.#tripEventsModel = tripEventsModel;
   }
 
   init = () => {
-    render(tripTabsContainer, this.#tripTabsView, RenderPosition.BEFOREEND);
-
-    this.#tripPresenter = new TripPresenter(tripMainContainer, tripEventsContainer, this.#tripEventsModel, this.#filterModel);
+    this.#tripPresenter = new TripPresenter(tripMainContainer, tripEventsContainer, this.#tripEventsModel, this.#destinationsModel, this.#filterModel);
     this.#filterPresenter = new FilterPresenter(tripFiltersContainer, this.#filterModel);
 
     newEventButton.addEventListener('click', (evt) => {
@@ -42,6 +40,7 @@ export default class AppPresenter {
       this.#handleTabsClick(MenuItem.NEW_EVENT);
     });
 
+    render(tripTabsContainer, this.#tripTabsView, RenderPosition.BEFOREEND);
     this.#tripTabsView.setTabClickHandler(this.#handleTabsClick);
 
     this.#filterPresenter.init();

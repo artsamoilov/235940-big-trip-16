@@ -2,11 +2,10 @@ import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import he from 'he';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
-import {TRIP_CITIES, TripEventType, Offer} from '../utils/const.js';
-import {getDestination} from '../mock/trip-event-destination.js';
+import {TripEventType, Offer} from '../utils/const.js';
 import SmartView from './smart-view.js';
 
-const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination = {}, offers = [], type} = {}, offersList, isEventNew) => {
+const createTripEventEditor = (destinations = [], {basePrice, dateFrom, dateTo, destination = {}, offers = [], type} = {}, offersList, isEventNew) => {
   const startTime = dayjs(dateFrom);
   const endTime = dayjs(dateTo);
 
@@ -18,7 +17,7 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination = {}, o
       <label class="event__type-label  event__type-label--${tripEvent}" for="event-type-${tripEvent}-1">${tripEvent}</label>
     </div>`).join('');
 
-  const getDestinationList = () => TRIP_CITIES.map((city) => `<option value="${city}"></option>`).join('');
+  const getDestinationList = () => destinations.map((city) => city ? `<option value="${city.name}"></option>` : '').join('');
 
   const getEditorCloseButtons = () => isEventNew ?
     '<button class="event__reset-btn" type="reset">Close</button>' :
@@ -121,9 +120,11 @@ export default class TripEventEditorView extends SmartView {
   #isEventNew = null;
   #startDatePicker = null;
   #endDatePicker = null;
+  #destinations = null;
 
-  constructor(tripEvent = {}, isEventNew = false) {
+  constructor(destinations, tripEvent = {}, isEventNew = false) {
     super();
+    this.#destinations = destinations;
     this._data = tripEvent;
     this.#isEventNew = isEventNew;
     this.#setInnerHandlers();
@@ -131,7 +132,7 @@ export default class TripEventEditorView extends SmartView {
   }
 
   get template() {
-    return createTripEventEditor(this._data, Offer, this.#isEventNew);
+    return createTripEventEditor(this.#destinations, this._data, Offer, this.#isEventNew);
   }
 
   #collapseClickHandler = (evt) => {
@@ -170,7 +171,7 @@ export default class TripEventEditorView extends SmartView {
   });
 
   #changeEventCityHandler = (evt) => {
-    const newDestination = getDestination(evt.target.value) || {name: evt.target.value};
+    const newDestination = this.#destinations.find((destination) => destination.name === evt.target.value) || {name: evt.target.value};
     this.updateData({destination: newDestination});
   };
 

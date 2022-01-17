@@ -11,18 +11,24 @@ const END_POINT = 'https://16.ecmascript.pages.academy/big-trip';
 const apiService = new ApiService(END_POINT, AUTHORIZATION);
 
 const tripEventsModel = new TripEventsModel(apiService);
-tripEventsModel.init();
+// tripEventsModel.init();
 
 const destinationsModel = new DestinationsModel(apiService);
-destinationsModel.init();
+// destinationsModel.init();
 
 const offersModel = new OffersModel(apiService);
-offersModel.init();
+// offersModel.init();
 
 const filterModel = new FilterModel();
 
 const appPresenter = new AppPresenter(tripEventsModel, destinationsModel, offersModel, filterModel);
-appPresenter.init();
+// appPresenter.init();
 
-// TODO разобраться, почему не работает блокировка до загрузки данных:
-//  tripEventsModel.init().finally(() => appPresenter.init());
+tripEventsModel.init()
+  .then(() => destinationsModel.init())
+  .then(() => offersModel.init())
+  .finally(() => appPresenter.init());
+
+// TODO выделить презентер для общей информации
+// TODO разобраться, почему не работает блокировка до загрузки данных
+// TODO прокинуть офферы из апп-презентера во вьюхи

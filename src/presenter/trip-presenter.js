@@ -13,7 +13,9 @@ import NewTripEventPresenter from './new-trip-event-presenter.js';
 export default class TripPresenter {
   #tripMainContainer = null;
   #tripEventsContainer = null;
+
   #tripEventsModel = null;
+  #destinationsModel = null;
   #filterModel = null;
 
   #tripSortComponent = null;
@@ -28,13 +30,15 @@ export default class TripPresenter {
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
 
-  constructor(tripMainContainer, tripEventsContainer, tripEventsModel, filterModel) {
-    this.#tripMainContainer = tripMainContainer;
-    this.#tripEventsContainer = tripEventsContainer;
+  constructor(tripMainContainer, tripEventsContainer, tripEventsModel, destinationsModel, filterModel) {
     this.#tripEventsModel = tripEventsModel;
+    this.#destinationsModel = destinationsModel;
     this.#filterModel = filterModel;
 
-    this.#newTripEventPresenter = new NewTripEventPresenter(this.#tripEventsListComponent, this.#handleViewAction);
+    this.#tripMainContainer = tripMainContainer;
+    this.#tripEventsContainer = tripEventsContainer;
+
+    this.#newTripEventPresenter = new NewTripEventPresenter(this.#destinationsModel, this.#tripEventsListComponent, this.#handleViewAction);
   }
 
   get tripEvents() {
@@ -131,7 +135,7 @@ export default class TripPresenter {
   }
 
   #renderTripEvent = (tripEvent) => {
-    const tripEventPresenter = new TripEventPresenter(this.#tripEventsListComponent, this.#handleViewAction, this.#handleModeChange);
+    const tripEventPresenter = new TripEventPresenter(this.#destinationsModel, this.#tripEventsListComponent, this.#handleViewAction, this.#handleModeChange);
     tripEventPresenter.init(tripEvent);
     this.#tripEventPresenter.set(tripEvent.id, tripEventPresenter);
   }

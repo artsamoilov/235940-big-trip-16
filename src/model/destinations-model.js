@@ -10,10 +10,6 @@ export default class DestinationsModel {
     return this.#destinations;
   }
 
-  get cities() {
-    return this.#destinations.map((destination) => destination.name);
-  }
-
   init = async () => {
     try {
       this.#destinations = await this.#apiService.destinations;
