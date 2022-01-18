@@ -9,12 +9,10 @@ export default class NewTripEventPresenter {
   #tripEventEditorComponent = null;
   #destroyCallback = null;
 
-  #destinationsModel = null;
-  #offersModel = null;
+  #tripModel = null;
 
-  constructor(destinationsModel, offersModel, tripEventsListComponent, changeData) {
-    this.#destinationsModel = destinationsModel;
-    this.#offersModel = offersModel;
+  constructor(tripModel, tripEventsListComponent, changeData) {
+    this.#tripModel = tripModel;
     this.#tripEventsListComponent = tripEventsListComponent;
     this.#changeData = changeData;
   }
@@ -26,7 +24,7 @@ export default class NewTripEventPresenter {
       return;
     }
 
-    this.#tripEventEditorComponent = new TripEventEditorView(this.#destinationsModel.destinations, this.#offersModel.offersList, {type: 'flight', offers: []}, true);
+    this.#tripEventEditorComponent = new TripEventEditorView(this.#tripModel.destinations, this.#tripModel.offersList, {type: 'flight', offers: []}, true);
     this.#tripEventEditorComponent.setSubmitFormHandler(this.#handleFormSubmit);
     this.#tripEventEditorComponent.setDeleteFormHandler(this.#handleFormDelete);
 

@@ -1,8 +1,10 @@
 import AbstractObservable from '../utils/abstract-observable.js';
 import {UpdateType} from '../utils/const.js';
 
-export default class TripEventsModel extends AbstractObservable {
+export default class TripModel extends AbstractObservable {
   #tripEvents = [];
+  #destinations = [];
+  #offers = [];
   #apiService = null;
 
   constructor(apiService) {
@@ -14,11 +16,27 @@ export default class TripEventsModel extends AbstractObservable {
     return this.#tripEvents;
   }
 
+  set tripEvents(tripEvents) {
+    this.#tripEvents = [...tripEvents];
+  }
+
+  get destinations() {
+    return this.#destinations;
+  }
+
+  get offersList() {
+    return this.#offers;
+  }
+
   init = async () => {
     try {
       const tripEvents = await this.#apiService.tripEvents;
+      this.#destinations = await this.#apiService.destinations;
+      this.#offers = await this.#apiService.offers;
       this.#tripEvents = tripEvents.map(this.#adaptToClient);
     } catch (err) {
+      this.#destinations = [];
+      this.#offers = [];
       this.#tripEvents = [];
     }
 

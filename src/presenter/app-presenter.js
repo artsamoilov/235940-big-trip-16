@@ -1,5 +1,7 @@
 import {MenuItem} from '../utils/const.js';
 import {remove, render, RenderPosition} from '../utils/render.js';
+import TripModel from '../model/trip-model.js';
+import FilterModel from '../model/filter-model.js';
 import TripTabsView from '../view/trip-tabs-view.js';
 import TripStatisticsView from '../view/trip-statistics-view.js';
 import TripPresenter from './trip-presenter.js';
@@ -12,10 +14,8 @@ const tripFiltersContainer = document.querySelector('.trip-controls__filters');
 const tripEventsContainer = document.querySelector('.trip-events');
 
 export default class AppPresenter {
-  #tripEventsModel = null;
-  #destinationsModel = null;
-  #offersModel = null;
-  #filterModel = null;
+  #tripModel = null;
+  #filterModel = new FilterModel();
 
   #tripTabsView = new TripTabsView();
 
@@ -24,15 +24,12 @@ export default class AppPresenter {
 
   #statisticsComponent = null;
 
-  constructor(tripEventsModel, destinationsModel, offersModel, filterModel) {
-    this.#destinationsModel = destinationsModel;
-    this.#offersModel = offersModel;
-    this.#filterModel = filterModel;
-    this.#tripEventsModel = tripEventsModel;
+  constructor(apiService) {
+    this.#tripModel = new TripModel(apiService);
   }
 
   init = () => {
-    this.#tripPresenter = new TripPresenter(tripMainContainer, tripEventsContainer, this.#tripEventsModel, this.#destinationsModel, this.#offersModel, this.#filterModel);
+    this.#tripPresenter = new TripPresenter(tripMainContainer, tripEventsContainer, this.#tripModel, this.#filterModel);
     this.#filterPresenter = new FilterPresenter(tripFiltersContainer, this.#filterModel);
 
     newEventButton.addEventListener('click', (evt) => {
@@ -45,6 +42,8 @@ export default class AppPresenter {
 
     this.#filterPresenter.init();
     this.#tripPresenter.init();
+
+    this.#tripModel.init();
   }
 
   #handleNewEventEditorClose = () => {
@@ -83,7 +82,7 @@ export default class AppPresenter {
         if (!statsTabElement.classList.contains('trip-tabs__btn--active')) {
           this.#filterPresenter.destroy();
           this.#tripPresenter.destroy();
-          this.#statisticsComponent = new TripStatisticsView(this.#tripEventsModel.tripEvents);
+          this.#statisticsComponent = new TripStatisticsView(this.#tripModel.tripEvents);
           tripEventsContainer.classList.add('trip-events--hidden');
           tableTabElement.classList.remove('trip-tabs__btn--active');
           statsTabElement.classList.add('trip-tabs__btn--active');
