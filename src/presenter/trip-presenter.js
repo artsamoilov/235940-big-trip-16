@@ -155,10 +155,10 @@ export default class TripPresenter {
   }
 
   #renderTrip = () => {
-    if (this.#isLoading) {
-      this.#renderLoadingMessage();
-      return;
-    }
+    // if (this.#isLoading) {
+    //   this.#renderLoadingMessage();
+    //   return;
+    // }
 
     if (this.tripEvents.length === 0) {
       this.#renderTripMessage();

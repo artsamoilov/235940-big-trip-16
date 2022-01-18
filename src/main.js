@@ -11,25 +11,21 @@ const END_POINT = 'https://16.ecmascript.pages.academy/big-trip';
 const apiService = new ApiService(END_POINT, AUTHORIZATION);
 
 const tripEventsModel = new TripEventsModel(apiService);
-// tripEventsModel.init();
 
 const destinationsModel = new DestinationsModel(apiService);
-// destinationsModel.init();
 
 const offersModel = new OffersModel(apiService);
-// offersModel.init();
 
 const filterModel = new FilterModel();
 
 const appPresenter = new AppPresenter(tripEventsModel, destinationsModel, offersModel, filterModel);
-// appPresenter.init();
 
 tripEventsModel.init()
   .then(() => destinationsModel.init())
   .then(() => offersModel.init())
   .finally(() => appPresenter.init());
 
-// TODO разобраться, почему не работает блокировка до загрузки данных
+// TODO разобраться, почему не работает блокировка до загрузки данных при отрисовке сообщения о загрузке
 // TODO добавить создание и удаление задач на сервере
 // TODO добавить функционал выбора офферов
 // TODO выделить презентер для общей информации
