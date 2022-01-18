@@ -49,27 +49,11 @@ export default class ApiService {
     const response = await this.#load({
       url: `points/${tripEvent.id}`,
       method: Method.PUT,
-      body: JSON.stringify(this.#adaptToServer(tripEvent)),
+      body: JSON.stringify(tripEvent),
       headers: new Headers({'Content-Type': 'application/json'}),
     });
 
     return await ApiService.parseResponse(response);
-  }
-
-  #adaptToServer = (tripEvent) => {
-    const adaptedTripEvent = {...tripEvent,
-      'base_price': tripEvent.basePrice,
-      'date_from': tripEvent.dateFrom,
-      'date_to': tripEvent.dateTo,
-      'is_favorite': tripEvent.isFavorite,
-    };
-
-    delete adaptedTripEvent.basePrice;
-    delete adaptedTripEvent.dateFrom;
-    delete adaptedTripEvent.dateTo;
-    delete adaptedTripEvent.isFavorite;
-
-    return adaptedTripEvent;
   }
 
   static parseResponse = (response) => response.json();

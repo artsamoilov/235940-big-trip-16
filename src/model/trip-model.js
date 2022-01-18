@@ -51,7 +51,7 @@ export default class TripModel extends AbstractObservable {
     }
 
     try {
-      const response = await this.#apiService.updateTripEvent(update);
+      const response = await this.#apiService.updateTripEvent(this.#adaptToServer(update));
       const updatedTripEvent = this.#adaptToClient(response);
       this.#tripEvents = [
         ...this.#tripEvents.slice(0, index),
@@ -100,6 +100,22 @@ export default class TripModel extends AbstractObservable {
     delete adaptedTripEvent['date_from'];
     delete adaptedTripEvent['date_to'];
     delete adaptedTripEvent['is_favorite'];
+
+    return adaptedTripEvent;
+  }
+
+  #adaptToServer = (tripEvent) => {
+    const adaptedTripEvent = {...tripEvent,
+      'base_price': tripEvent.basePrice,
+      'date_from': tripEvent.dateFrom,
+      'date_to': tripEvent.dateTo,
+      'is_favorite': tripEvent.isFavorite,
+    };
+
+    delete adaptedTripEvent.basePrice;
+    delete adaptedTripEvent.dateFrom;
+    delete adaptedTripEvent.dateTo;
+    delete adaptedTripEvent.isFavorite;
 
     return adaptedTripEvent;
   }
