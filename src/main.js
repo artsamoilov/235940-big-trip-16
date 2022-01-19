@@ -10,5 +10,4 @@ const appPresenter = new AppPresenter(apiService);
 appPresenter.init();
 
 // TODO добавить создание и удаление задач на сервере
-// TODO добавить функционал выбора офферов
 // TODO выделить презентер для общей информации

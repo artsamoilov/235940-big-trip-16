@@ -181,7 +181,21 @@ export default class TripEventEditorView extends SmartView {
     this.updateData({basePrice: Number(evt.target.value)}, true);
   }
 
+  #changeEventOffersHandler = (evt) => {
+    const checkedOfferTitle = evt.target.nextElementSibling.querySelector('span').textContent;
+    const checkedOffer = this.#offersList.find((offers) => offers.type === this._data.type).offers.find((offer) => offer.title === checkedOfferTitle);
+
+    if (evt.target.checked) {
+      this.updateData({offers: [checkedOffer, ...this._data.offers]}, true);
+      return;
+    }
+
+    const checkedOfferIndex = this._data.offers.findIndex(({id}) => id === checkedOffer.id);
+    this.updateData({offers: [...this._data.offers.slice(0, checkedOfferIndex), ...this._data.offers.slice(checkedOfferIndex + 1)]}, true);
+  }
+
   #setInnerHandlers = () => {
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#changeEventOffersHandler);
     this.element.querySelector('.event__input--price').addEventListener('change', this.#changeEventPriceHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeEventCityHandler);
