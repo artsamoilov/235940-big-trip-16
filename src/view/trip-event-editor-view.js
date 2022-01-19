@@ -222,7 +222,12 @@ export default class TripEventEditorView extends SmartView {
     this.#endDatePicker = null;
   }
 
-  #startDateChangeHandler = (newStartDate) => this.updateData({dateFrom: newStartDate}, true);
+  #startDateChangeHandler = (newStartDate) => {
+    this.updateData({dateFrom: newStartDate}, true);
+    this.#endDatePicker.destroy();
+    this.#endDatePicker = null;
+    this.#setEndDatePicker();
+  }
 
   #endDateChangeHandler = (newEndDate) => this.updateData({dateTo: newEndDate}, true);
 
@@ -243,6 +248,7 @@ export default class TripEventEditorView extends SmartView {
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
+        minDate: dayjs(this._data.dateFrom).toISOString(),
         onChange: this.#endDateChangeHandler,
       }
     );
