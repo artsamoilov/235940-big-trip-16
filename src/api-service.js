@@ -1,6 +1,8 @@
 const Method = {
   GET: 'GET',
   PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE',
 };
 
 export default class ApiService {
@@ -55,6 +57,22 @@ export default class ApiService {
 
     return await ApiService.parseResponse(response);
   }
+
+  addTripEvent = async (tripEvent) => {
+    const response = await this.#load({
+      url: 'points/',
+      method: Method.POST,
+      body: JSON.stringify(tripEvent),
+      headers: new Headers({'Content-Type': 'application/json'}),
+    });
+
+    return await ApiService.parseResponse(response);
+  }
+
+  deleteTripEvent = async (tripEvent) => await this.#load({
+    url: `points/${tripEvent.id}`,
+    method: Method.DELETE,
+  });
 
   static parseResponse = (response) => response.json();
 

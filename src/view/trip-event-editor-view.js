@@ -20,7 +20,7 @@ const createTripEventEditor = (destinations = [], offersList = [], {basePrice, d
   const getDestinationList = () => destinations.map((city) => city ? `<option value="${city.name}"></option>` : '').join('');
 
   const getEditorCloseButtons = () => isEventNew ?
-    '<button class="event__reset-btn" type="reset">Close</button>' :
+    '<button class="event__reset-btn" type="reset">Cancel</button>' :
     `<button class="event__reset-btn" type="reset">Delete</button>
     <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>

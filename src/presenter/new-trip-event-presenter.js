@@ -1,7 +1,20 @@
 import {render, remove, RenderPosition} from '../utils/render.js';
 import {UpdateType, UserAction} from '../utils/const.js';
-import {nanoid} from 'nanoid';
 import TripEventEditorView from '../view/trip-event-editor-view.js';
+
+const EMPTY_TRIP_EVENT = {
+  basePrice: '',
+  dateFrom: '',
+  dateTo: '',
+  destination: {
+    description: '',
+    name: '',
+    pictures: [],
+  },
+  isFavorite: false,
+  offers: [],
+  type: 'flight',
+};
 
 export default class NewTripEventPresenter {
   #tripEventsListComponent = null;
@@ -24,7 +37,7 @@ export default class NewTripEventPresenter {
       return;
     }
 
-    this.#tripEventEditorComponent = new TripEventEditorView(this.#tripModel.destinations, this.#tripModel.offersList, {type: 'flight', offers: []}, true);
+    this.#tripEventEditorComponent = new TripEventEditorView(this.#tripModel.destinations, this.#tripModel.offersList, EMPTY_TRIP_EVENT, true);
     this.#tripEventEditorComponent.setSubmitFormHandler(this.#handleFormSubmit);
     this.#tripEventEditorComponent.setDeleteFormHandler(this.#handleFormDelete);
 
@@ -57,7 +70,7 @@ export default class NewTripEventPresenter {
     this.#changeData(
       UserAction.ADD_TRIP_EVENT,
       UpdateType.MAJOR,
-      {id: nanoid(), ...newTripEvent},
+      newTripEvent,
     );
     this.destroy();
   }
