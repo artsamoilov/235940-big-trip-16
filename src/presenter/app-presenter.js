@@ -37,13 +37,14 @@ export default class AppPresenter {
       this.#handleTabsClick(MenuItem.NEW_EVENT);
     });
 
-    render(tripTabsContainer, this.#tripTabsView, RenderPosition.BEFOREEND);
     this.#tripTabsView.setTabClickHandler(this.#handleTabsClick);
 
-    this.#filterPresenter.init();
     this.#tripPresenter.init();
 
-    this.#tripModel.init();
+    this.#tripModel.init().finally(() => {
+      render(tripTabsContainer, this.#tripTabsView, RenderPosition.BEFOREEND);
+      this.#filterPresenter.init();
+    });
   }
 
   #handleNewEventEditorClose = () => {
