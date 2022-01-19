@@ -14,13 +14,16 @@ export default class TripEventPresenter {
   #changeData = null;
   #changeMode = null;
 
+  #tripModel = null;
+
   #tripEventComponent = null;
   #tripEventEditorComponent = null;
 
   #tripEvent = null;
   #mode = Mode.DEFAULT;
 
-  constructor(tripEventsListComponent, changeData, changeMode) {
+  constructor(tripModel, tripEventsListComponent, changeData, changeMode) {
+    this.#tripModel = tripModel;
     this.#tripEventsListComponent = tripEventsListComponent;
     this.#changeData = changeData;
     this.#changeMode = changeMode;
@@ -33,7 +36,7 @@ export default class TripEventPresenter {
     const existingTripEventEditorComponent = this.#tripEventEditorComponent;
 
     this.#tripEventComponent = new TripEventView(tripEvent);
-    this.#tripEventEditorComponent = new TripEventEditorView(tripEvent);
+    this.#tripEventEditorComponent = new TripEventEditorView(this.#tripModel.destinations, this.#tripModel.offersList, tripEvent);
 
     this.#tripEventComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
     this.#tripEventComponent.setExpandClickHandler(this.#handleExpandClick);

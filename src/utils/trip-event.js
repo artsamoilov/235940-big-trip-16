@@ -43,7 +43,7 @@ export const countTripEventsTimeByType = (tripEvents, type) => {
 const addPaddingZero = (number) => number < 10 ? `0${number}` : number;
 
 export const formatChartTime = (time) => {
-  const minutesDifference = time % 60 > 0 ? `${addPaddingZero(time % 60)}M` : '';
+  const minutesDifference = `${addPaddingZero(time % 60)}M`;
   const hoursDifference = Math.floor(time / 60) % 24 > 0 ? `${addPaddingZero(Math.floor(time / 60) % 24)}H ` : '';
   const daysDifference = Math.floor((time / 60) / 24) > 0 ? `${addPaddingZero(Math.floor((time / 60) / 24))}D ` : '';
 

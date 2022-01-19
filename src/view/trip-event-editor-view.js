@@ -2,11 +2,10 @@ import dayjs from 'dayjs';
 import flatpickr from 'flatpickr';
 import he from 'he';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
-import {TRIP_CITIES, TripEventType, Offer} from '../utils/const.js';
-import {getDestination} from '../mock/trip-event-destination.js';
+import {TripEventType} from '../utils/const.js';
 import SmartView from './smart-view.js';
 
-const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination = {}, offers = [], type} = {}, offersList, isEventNew) => {
+const createTripEventEditor = (destinations = [], offersList = [], {basePrice, dateFrom, dateTo, destination = {}, offers = [], type} = {}, isEventNew) => {
   const startTime = dayjs(dateFrom);
   const endTime = dayjs(dateTo);
 
@@ -18,7 +17,7 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination = {}, o
       <label class="event__type-label  event__type-label--${tripEvent}" for="event-type-${tripEvent}-1">${tripEvent}</label>
     </div>`).join('');
 
-  const getDestinationList = () => TRIP_CITIES.map((city) => `<option value="${city}"></option>`).join('');
+  const getDestinationList = () => destinations.map((city) => city ? `<option value="${city.name}"></option>` : '').join('');
 
   const getEditorCloseButtons = () => isEventNew ?
     '<button class="event__reset-btn" type="reset">Close</button>' :
@@ -103,7 +102,7 @@ const createTripEventEditor = ({basePrice, dateFrom, dateTo, destination = {}, o
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${basePrice ? basePrice : ''}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" min="0" value="${basePrice ? basePrice : 0}">
         </div>
 
         <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -121,9 +120,13 @@ export default class TripEventEditorView extends SmartView {
   #isEventNew = null;
   #startDatePicker = null;
   #endDatePicker = null;
+  #destinations = null;
+  #offersList = null;
 
-  constructor(tripEvent = {}, isEventNew = false) {
+  constructor(destinations = [], offersList = [], tripEvent = {}, isEventNew = false) {
     super();
+    this.#destinations = destinations;
+    this.#offersList = offersList;
     this._data = tripEvent;
     this.#isEventNew = isEventNew;
     this.#setInnerHandlers();
@@ -131,7 +134,7 @@ export default class TripEventEditorView extends SmartView {
   }
 
   get template() {
-    return createTripEventEditor(this._data, Offer, this.#isEventNew);
+    return createTripEventEditor(this.#destinations, this.#offersList, this._data, this.#isEventNew);
   }
 
   #collapseClickHandler = (evt) => {
@@ -170,11 +173,30 @@ export default class TripEventEditorView extends SmartView {
   });
 
   #changeEventCityHandler = (evt) => {
-    const newDestination = getDestination(evt.target.value) || {name: evt.target.value};
+    const newDestination = this.#destinations.find((destination) => destination.name === evt.target.value) || {name: evt.target.value};
     this.updateData({destination: newDestination});
   };
 
+  #changeEventPriceHandler = (evt) => {
+    this.updateData({basePrice: Number(evt.target.value)}, true);
+  }
+
+  #changeEventOffersHandler = (evt) => {
+    const checkedOfferTitle = evt.target.nextElementSibling.querySelector('span').textContent;
+    const checkedOffer = this.#offersList.find((offers) => offers.type === this._data.type).offers.find((offer) => offer.title === checkedOfferTitle);
+
+    if (evt.target.checked) {
+      this.updateData({offers: [checkedOffer, ...this._data.offers]}, true);
+      return;
+    }
+
+    const checkedOfferIndex = this._data.offers.findIndex(({id}) => id === checkedOffer.id);
+    this.updateData({offers: [...this._data.offers.slice(0, checkedOfferIndex), ...this._data.offers.slice(checkedOfferIndex + 1)]}, true);
+  }
+
   #setInnerHandlers = () => {
+    this.element.querySelector('.event__available-offers').addEventListener('change', this.#changeEventOffersHandler);
+    this.element.querySelector('.event__input--price').addEventListener('change', this.#changeEventPriceHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeEventCityHandler);
   }
