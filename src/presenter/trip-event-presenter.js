@@ -113,6 +113,7 @@ export default class TripEventPresenter {
 
   #switchEventToEditor = () => {
     replace(this.#tripEventEditorComponent, this.#tripEventComponent);
+    this.#tripEventEditorComponent.setDatePickers();
     document.addEventListener('keydown', this.#escKeydownHandler);
     this.#changeMode();
     this.#mode = Mode.EDITING;

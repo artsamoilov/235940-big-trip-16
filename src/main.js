@@ -8,5 +8,3 @@ const apiService = new ApiService(END_POINT, AUTHORIZATION);
 
 const appPresenter = new AppPresenter(apiService);
 appPresenter.init();
-
-// TODO инициализировать флэтпикеры только при открытии формы редактирования
