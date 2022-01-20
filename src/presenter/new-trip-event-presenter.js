@@ -71,6 +71,16 @@ export default class NewTripEventPresenter {
     isSaving: true,
   });
 
+  setAborting = () => {
+    const resetFormState = () => this.#tripEventEditorComponent.updateData({
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    });
+
+    this.#tripEventEditorComponent.shake(resetFormState);
+  }
+
   #handleFormSubmit = (newTripEvent) => this.#changeData(
     UserAction.ADD_TRIP_EVENT,
     UpdateType.MAJOR,

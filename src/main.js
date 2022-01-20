@@ -10,3 +10,4 @@ const appPresenter = new AppPresenter(apiService);
 appPresenter.init();
 
 // TODO выделить презентер для общей информации
+// TODO инициализировать флэтпикеры только при открытии формы редактирования

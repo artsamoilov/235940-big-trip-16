@@ -1,5 +1,6 @@
 import AbstractObservable from '../utils/abstract-observable.js';
 import {UpdateType} from '../utils/const.js';
+import dayjs from 'dayjs';
 
 export default class TripModel extends AbstractObservable {
   #tripEvents = [];
@@ -48,6 +49,10 @@ export default class TripModel extends AbstractObservable {
 
     if (index === -1) {
       throw new Error('Can\'t update a nonexistent trip event');
+    }
+
+    if (!dayjs(update.dateFrom).isBefore(update.dateTo)) {
+      throw new Error('The end time can\'t be less than the start time');
     }
 
     try {

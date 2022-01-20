@@ -92,19 +92,31 @@ export default class TripPresenter {
     this.#tripEventPresenter.forEach((presenter) => presenter.resetView());
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_TRIP_EVENT:
         this.#tripEventPresenter.get(update.id).setViewState(State.SAVING);
-        this.#tripModel.updateTripEvent(updateType, update);
+        try {
+          await this.#tripModel.updateTripEvent(updateType, update);
+        } catch (err) {
+          this.#tripEventPresenter.get(update.id).setViewState(State.ABORTING);
+        }
         break;
       case UserAction.ADD_TRIP_EVENT:
         this.#newTripEventPresenter.setSaving();
-        this.#tripModel.addTripEvent(updateType, update);
+        try {
+          await this.#tripModel.addTripEvent(updateType, update);
+        } catch (err) {
+          this.#newTripEventPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_TRIP_EVENT:
         this.#tripEventPresenter.get(update.id).setViewState(State.DELETING);
-        this.#tripModel.deleteTripEvent(updateType, update);
+        try {
+          await this.#tripModel.deleteTripEvent(updateType, update);
+        } catch (err) {
+          this.#tripEventPresenter.get(update.id).setViewState(State.ABORTING);
+        }
         break;
     }
   }
