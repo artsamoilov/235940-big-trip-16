@@ -1,7 +1,20 @@
 import {render, remove, RenderPosition} from '../utils/render.js';
 import {UpdateType, UserAction} from '../utils/const.js';
-import {nanoid} from 'nanoid';
 import TripEventEditorView from '../view/trip-event-editor-view.js';
+
+const EMPTY_TRIP_EVENT = {
+  basePrice: '',
+  dateFrom: '',
+  dateTo: '',
+  destination: {
+    description: '',
+    name: '',
+    pictures: [],
+  },
+  isFavorite: false,
+  offers: [],
+  type: 'flight',
+};
 
 export default class NewTripEventPresenter {
   #tripEventsListComponent = null;
@@ -24,7 +37,7 @@ export default class NewTripEventPresenter {
       return;
     }
 
-    this.#tripEventEditorComponent = new TripEventEditorView(this.#tripModel.destinations, this.#tripModel.offersList, {type: 'flight', offers: []}, true);
+    this.#tripEventEditorComponent = new TripEventEditorView(this.#tripModel.destinations, this.#tripModel.offersList, {...EMPTY_TRIP_EVENT, isEventNew: true});
     this.#tripEventEditorComponent.setSubmitFormHandler(this.#handleFormSubmit);
     this.#tripEventEditorComponent.setDeleteFormHandler(this.#handleFormDelete);
 
@@ -53,14 +66,26 @@ export default class NewTripEventPresenter {
     }
   };
 
-  #handleFormSubmit = (newTripEvent) => {
-    this.#changeData(
-      UserAction.ADD_TRIP_EVENT,
-      UpdateType.MAJOR,
-      {id: nanoid(), ...newTripEvent},
-    );
-    this.destroy();
+  setSaving = () => this.#tripEventEditorComponent.updateData({
+    isDisabled: true,
+    isSaving: true,
+  });
+
+  setAborting = () => {
+    const resetFormState = () => this.#tripEventEditorComponent.updateData({
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    });
+
+    this.#tripEventEditorComponent.shake(resetFormState);
   }
+
+  #handleFormSubmit = (newTripEvent) => this.#changeData(
+    UserAction.ADD_TRIP_EVENT,
+    UpdateType.MAJOR,
+    newTripEvent,
+  );
 
   #handleFormDelete = () => this.destroy();
 }

@@ -9,6 +9,12 @@ const Mode = {
   EDITING: 'EDITING',
 };
 
+export const State = {
+  SAVING: 'SAVING',
+  DELETING: 'DELETING',
+  ABORTING: 'ABORTING',
+};
+
 export default class TripEventPresenter {
   #tripEventsListComponent = null;
   #changeData = null;
@@ -54,7 +60,8 @@ export default class TripEventPresenter {
     }
 
     if (this.#mode === Mode.EDITING) {
-      replace(this.#tripEventEditorComponent, existingTripEventEditorComponent);
+      replace(this.#tripEventComponent, existingTripEventEditorComponent);
+      this.#mode = Mode.DEFAULT;
     }
 
     remove(existingTripEventComponent);
@@ -70,6 +77,37 @@ export default class TripEventPresenter {
     if (this.#mode !== Mode.DEFAULT) {
       this.#tripEventEditorComponent.reset(this.#tripEvent);
       this.#switchEditorToEvent();
+    }
+  }
+
+  setViewState = (state) => {
+    if (this.#mode === Mode.DEFAULT) {
+      return;
+    }
+
+    const resetFormState = () => this.#tripEventEditorComponent.updateData({
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    });
+
+    switch (state) {
+      case State.SAVING:
+        this.#tripEventEditorComponent.updateData({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      case State.DELETING:
+        this.#tripEventEditorComponent.updateData({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING:
+        this.#tripEventComponent.shake(resetFormState);
+        this.#tripEventEditorComponent.shake(resetFormState);
+        break;
     }
   }
 
@@ -116,8 +154,6 @@ export default class TripEventPresenter {
       isPatchUpdate ? UpdateType.PATCH : UpdateType.MAJOR,
       update,
     );
-
-    this.#switchEditorToEvent();
   }
 
   #handleFormDelete = (tripEvent) => {

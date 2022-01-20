@@ -7,7 +7,7 @@ import TripEventsListView from '../view/trip-events-list-view.js';
 import TripMessageView from '../view/trip-message-view.js';
 import TripLoadingView from '../view/trip-loading-view.js';
 import TripInfoView from '../view/trip-info-view.js';
-import TripEventPresenter from './trip-event-presenter.js';
+import TripEventPresenter, {State} from './trip-event-presenter.js';
 import NewTripEventPresenter from './new-trip-event-presenter.js';
 
 export default class TripPresenter {
@@ -92,16 +92,31 @@ export default class TripPresenter {
     this.#tripEventPresenter.forEach((presenter) => presenter.resetView());
   }
 
-  #handleViewAction = (actionType, updateType, update) => {
+  #handleViewAction = async (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_TRIP_EVENT:
-        this.#tripModel.updateTripEvent(updateType, update);
+        this.#tripEventPresenter.get(update.id).setViewState(State.SAVING);
+        try {
+          await this.#tripModel.updateTripEvent(updateType, update);
+        } catch (err) {
+          this.#tripEventPresenter.get(update.id).setViewState(State.ABORTING);
+        }
         break;
       case UserAction.ADD_TRIP_EVENT:
-        this.#tripModel.addTripEvent(updateType, update);
+        this.#newTripEventPresenter.setSaving();
+        try {
+          await this.#tripModel.addTripEvent(updateType, update);
+        } catch (err) {
+          this.#newTripEventPresenter.setAborting();
+        }
         break;
       case UserAction.DELETE_TRIP_EVENT:
-        this.#tripModel.deleteTripEvent(updateType, update);
+        this.#tripEventPresenter.get(update.id).setViewState(State.DELETING);
+        try {
+          await this.#tripModel.deleteTripEvent(updateType, update);
+        } catch (err) {
+          this.#tripEventPresenter.get(update.id).setViewState(State.ABORTING);
+        }
         break;
     }
   }

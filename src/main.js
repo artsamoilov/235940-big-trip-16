@@ -9,5 +9,5 @@ const apiService = new ApiService(END_POINT, AUTHORIZATION);
 const appPresenter = new AppPresenter(apiService);
 appPresenter.init();
 
-// TODO добавить создание и удаление задач на сервере
 // TODO выделить презентер для общей информации
+// TODO инициализировать флэтпикеры только при открытии формы редактирования

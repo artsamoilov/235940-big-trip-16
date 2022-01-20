@@ -5,7 +5,19 @@ import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 import {TripEventType} from '../utils/const.js';
 import SmartView from './smart-view.js';
 
-const createTripEventEditor = (destinations = [], offersList = [], {basePrice, dateFrom, dateTo, destination = {}, offers = [], type} = {}, isEventNew) => {
+const createTripEventEditor = (destinations = [], offersList = [], data = {}) => {
+  const {
+    basePrice,
+    dateFrom,
+    dateTo,
+    destination,
+    offers,
+    type,
+    isEventNew,
+    isDisabled,
+    isSaving,
+    isDeleting} = data;
+
   const startTime = dayjs(dateFrom);
   const endTime = dayjs(dateTo);
 
@@ -13,16 +25,16 @@ const createTripEventEditor = (destinations = [], offersList = [], {basePrice, d
 
   const getEventsList = () => Object.values(TripEventType).map((tripEvent) =>
     `<div class="event__type-item">
-      <input id="event-type-${tripEvent}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${tripEvent}" ${checkEventType(tripEvent)}>
+      <input id="event-type-${tripEvent}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${tripEvent}" ${checkEventType(tripEvent)} ${isDisabled ? 'disabled' : ''}>
       <label class="event__type-label  event__type-label--${tripEvent}" for="event-type-${tripEvent}-1">${tripEvent}</label>
     </div>`).join('');
 
   const getDestinationList = () => destinations.map((city) => city ? `<option value="${city.name}"></option>` : '').join('');
 
   const getEditorCloseButtons = () => isEventNew ?
-    '<button class="event__reset-btn" type="reset">Close</button>' :
-    `<button class="event__reset-btn" type="reset">Delete</button>
-    <button class="event__rollup-btn" type="button">
+    `<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>Cancel</button>` :
+    `<button class="event__reset-btn" type="reset" ${isDisabled ? 'disabled' : ''}>${isDeleting ? 'Deleting...' : 'Delete'}</button>
+    <button class="event__rollup-btn" type="button" ${isDisabled ? 'disabled' : ''}>
       <span class="visually-hidden">Open event</span>
     </button>`;
 
@@ -30,7 +42,7 @@ const createTripEventEditor = (destinations = [], offersList = [], {basePrice, d
 
   const getOffers = () => `${offersList.find((offer) => offer.type === type).offers.map(({id, title, price}) =>
     `<div class="event__offer-selector">
-      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" ${getOfferCheckedStatus(id)}>
+      <input class="event__offer-checkbox  visually-hidden" id="event-offer-${id}" type="checkbox" name="event-offer-${id}" ${getOfferCheckedStatus(id)} ${isDisabled ? 'disabled' : ''}>
       <label class="event__offer-label" for="event-offer-${id}">
         <span class="event__offer-title">${title}</span>
         &plus;&euro;&nbsp;
@@ -69,7 +81,7 @@ const createTripEventEditor = (destinations = [], offersList = [], {basePrice, d
             <span class="visually-hidden">Choose event type</span>
             <img class="event__type-icon" width="17" height="17" src="img/icons/${type}.png" alt="Event type icon">
           </label>
-          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
+          <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox" ${isDisabled ? 'disabled' : ''}>
 
           <div class="event__type-list">
             <fieldset class="event__type-group">
@@ -83,7 +95,7 @@ const createTripEventEditor = (destinations = [], offersList = [], {basePrice, d
           <label class="event__label  event__type-output" for="event-destination-1">
             ${type}
           </label>
-          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name ? he.encode(destination.name) : ''}" list="destination-list-1">
+          <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destination.name ? he.encode(destination.name) : ''}" list="destination-list-1" ${isDisabled ? 'disabled' : ''}>
           <datalist id="destination-list-1">
             ${getDestinationList()}
           </datalist>
@@ -91,10 +103,10 @@ const createTripEventEditor = (destinations = [], offersList = [], {basePrice, d
 
         <div class="event__field-group  event__field-group--time">
           <label class="visually-hidden" for="event-start-time-1">From</label>
-          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFrom ? startTime.format('DD/MM/YY HH:mm') : ''}">
+          <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${dateFrom ? startTime.format('DD/MM/YY HH:mm') : ''}" ${isDisabled ? 'disabled' : ''}>
           &mdash;
           <label class="visually-hidden" for="event-end-time-1">To</label>
-          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTo ? endTime.format('DD/MM/YY HH:mm') : ''}">
+          <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${dateTo ? endTime.format('DD/MM/YY HH:mm') : ''}" ${isDisabled ? 'disabled' : ''}>
         </div>
 
         <div class="event__field-group  event__field-group--price">
@@ -102,10 +114,10 @@ const createTripEventEditor = (destinations = [], offersList = [], {basePrice, d
             <span class="visually-hidden">Price</span>
             &euro;
           </label>
-          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" min="0" value="${basePrice ? basePrice : 0}">
+          <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" min="0" value="${basePrice ? basePrice : 0}" ${isDisabled ? 'disabled' : ''}>
         </div>
 
-        <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+        <button class="event__save-btn  btn  btn--blue" type="submit" ${isDisabled ? 'disabled' : ''}>${isSaving ? 'Saving...' : 'Save'}</button>
         ${getEditorCloseButtons()}
       </header>
       <section class="event__details">
@@ -117,24 +129,22 @@ const createTripEventEditor = (destinations = [], offersList = [], {basePrice, d
 };
 
 export default class TripEventEditorView extends SmartView {
-  #isEventNew = null;
   #startDatePicker = null;
   #endDatePicker = null;
   #destinations = null;
   #offersList = null;
 
-  constructor(destinations = [], offersList = [], tripEvent = {}, isEventNew = false) {
+  constructor(destinations = [], offersList = [], tripEvent = {}) {
     super();
     this.#destinations = destinations;
     this.#offersList = offersList;
-    this._data = tripEvent;
-    this.#isEventNew = isEventNew;
+    this._data = TripEventEditorView.parseTripEventToData(tripEvent);
     this.#setInnerHandlers();
     this.#setDatePickers();
   }
 
   get template() {
-    return createTripEventEditor(this.#destinations, this.#offersList, this._data, this.#isEventNew);
+    return createTripEventEditor(this.#destinations, this.#offersList, this._data);
   }
 
   #collapseClickHandler = (evt) => {
@@ -149,7 +159,7 @@ export default class TripEventEditorView extends SmartView {
 
   #submitFormHandler = (evt) => {
     evt.preventDefault();
-    this._callback.submitForm(this._data);
+    this._callback.submitForm(TripEventEditorView.parseDataToTripEvent(this._data));
   }
 
   setSubmitFormHandler = (callback) => {
@@ -159,7 +169,7 @@ export default class TripEventEditorView extends SmartView {
 
   #deleteFormHandler = (evt) => {
     evt.preventDefault();
-    this._callback.deleteForm(this._data);
+    this._callback.deleteForm(TripEventEditorView.parseDataToTripEvent(this._data));
   }
 
   setDeleteFormHandler = (callback) => {
@@ -207,12 +217,12 @@ export default class TripEventEditorView extends SmartView {
     this.setDeleteFormHandler(this._callback.deleteForm);
     this.#setDatePickers();
 
-    if (!this.#isEventNew) {
+    if (!this._data.isEventNew) {
       this.setCollapseClickHandler(this._callback.collapseClick);
     }
   }
 
-  reset = (tripEvent) => this.updateData(tripEvent);
+  reset = (tripEvent) => this.updateData(TripEventEditorView.parseTripEventToData(tripEvent));
 
   removeElement = () => {
     super.removeElement();
@@ -222,7 +232,12 @@ export default class TripEventEditorView extends SmartView {
     this.#endDatePicker = null;
   }
 
-  #startDateChangeHandler = (newStartDate) => this.updateData({dateFrom: newStartDate}, true);
+  #startDateChangeHandler = (newStartDate) => {
+    this.updateData({dateFrom: newStartDate}, true);
+    this.#endDatePicker.destroy();
+    this.#endDatePicker = null;
+    this.#setEndDatePicker();
+  }
 
   #endDateChangeHandler = (newEndDate) => this.updateData({dateTo: newEndDate}, true);
 
@@ -243,6 +258,7 @@ export default class TripEventEditorView extends SmartView {
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
+        minDate: this._data.dateFrom ? dayjs(this._data.dateFrom).toISOString() : '',
         onChange: this.#endDateChangeHandler,
       }
     );
@@ -251,5 +267,24 @@ export default class TripEventEditorView extends SmartView {
   #setDatePickers = () => {
     this.#setStartDatePicker();
     this.#setEndDatePicker();
+  }
+
+  static parseTripEventToData = (tripEvent) => ({
+    isEventNew: false,
+    isDisabled: false,
+    isSaving: false,
+    isDeleting: false,
+    ...tripEvent,
+  })
+
+  static parseDataToTripEvent = (data) => {
+    const tripEvent = {...data};
+
+    delete tripEvent.isEventNew;
+    delete tripEvent.isDisabled;
+    delete tripEvent.isSaving;
+    delete tripEvent.isDeleting;
+
+    return tripEvent;
   }
 }
