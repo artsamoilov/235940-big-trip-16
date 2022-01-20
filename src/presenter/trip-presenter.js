@@ -6,7 +6,6 @@ import TripSortView from '../view/trip-sort-view.js';
 import TripEventsListView from '../view/trip-events-list-view.js';
 import TripMessageView from '../view/trip-message-view.js';
 import TripLoadingView from '../view/trip-loading-view.js';
-import TripInfoView from '../view/trip-info-view.js';
 import TripEventPresenter, {State} from './trip-event-presenter.js';
 import NewTripEventPresenter from './new-trip-event-presenter.js';
 
@@ -19,19 +18,19 @@ export default class TripPresenter {
 
   #tripSortComponent = null;
   #tripMessageComponent = null;
-  #tripInfoComponent = null;
   #tripLoadingComponent = new TripLoadingView();
   #tripEventsListComponent = new TripEventsListView();
 
   #tripEventPresenter = new Map();
   #newTripEventPresenter = null;
   #filterPresenter = null;
+  #tripInfoPresenter = null;
 
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
 
-  constructor(tripMainContainer, tripEventsContainer, tripModel, filterModel, filterPresenter) {
+  constructor(tripMainContainer, tripEventsContainer, tripModel, filterModel, filterPresenter, tripInfoPresenter) {
     this.#tripModel = tripModel;
     this.#filterModel = filterModel;
 
@@ -39,6 +38,7 @@ export default class TripPresenter {
     this.#tripEventsContainer = tripEventsContainer;
 
     this.#filterPresenter = filterPresenter;
+    this.#tripInfoPresenter = tripInfoPresenter;
     this.#newTripEventPresenter = new NewTripEventPresenter(this.#tripModel, this.#tripEventsListComponent, this.#handleViewAction);
   }
 
@@ -129,6 +129,8 @@ export default class TripPresenter {
       case UpdateType.MAJOR:
         this.#clearTrip(true);
         this.#renderTrip();
+        this.#tripInfoPresenter.destroy();
+        this.#tripInfoPresenter.init();
         this.#filterPresenter.init();
         break;
       case UpdateType.MINOR:
@@ -144,11 +146,6 @@ export default class TripPresenter {
         this.#renderTrip();
         break;
     }
-  }
-
-  #renderTripInfo = () => {
-    this.#tripInfoComponent = new TripInfoView(this.#tripModel.tripEvents);
-    render(this.#tripMainContainer, this.#tripInfoComponent, RenderPosition.AFTERBEGIN);
   }
 
   #renderTripEvent = (tripEvent) => {
@@ -180,7 +177,6 @@ export default class TripPresenter {
       return;
     }
 
-    this.#renderTripInfo();
     this.#renderTripSort();
     this.#renderTripEventsList();
   }
@@ -190,7 +186,6 @@ export default class TripPresenter {
     this.#tripEventPresenter.forEach((presenter) => presenter.destroy());
     this.#tripEventPresenter.clear();
 
-    remove(this.#tripInfoComponent);
     remove(this.#tripSortComponent);
     remove(this.#tripLoadingComponent);
 

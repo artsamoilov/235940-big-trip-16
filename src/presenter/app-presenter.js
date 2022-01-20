@@ -6,6 +6,7 @@ import TripTabsView from '../view/trip-tabs-view.js';
 import TripStatisticsView from '../view/trip-statistics-view.js';
 import TripPresenter from './trip-presenter.js';
 import FilterPresenter from './filter-presenter.js';
+import TripInfoPresenter from './trip-info-presenter.js';
 
 const tripMainContainer = document.querySelector('.trip-main');
 const newEventButton = document.querySelector('.trip-main__event-add-btn');
@@ -20,6 +21,7 @@ export default class AppPresenter {
   #tripTabsView = new TripTabsView();
 
   #tripPresenter = null;
+  #tripInfoPresenter = null;
   #filterPresenter = null;
 
   #statisticsComponent = null;
@@ -30,7 +32,8 @@ export default class AppPresenter {
 
   init = () => {
     this.#filterPresenter = new FilterPresenter(tripFiltersContainer, this.#tripModel, this.#filterModel);
-    this.#tripPresenter = new TripPresenter(tripMainContainer, tripEventsContainer, this.#tripModel, this.#filterModel, this.#filterPresenter);
+    this.#tripInfoPresenter = new TripInfoPresenter(tripMainContainer, this.#tripModel);
+    this.#tripPresenter = new TripPresenter(tripMainContainer, tripEventsContainer, this.#tripModel, this.#filterModel, this.#filterPresenter, this.#tripInfoPresenter);
 
     newEventButton.addEventListener('click', (evt) => {
       evt.preventDefault();
@@ -44,6 +47,7 @@ export default class AppPresenter {
     this.#tripModel.init().finally(() => {
       render(tripTabsContainer, this.#tripTabsView, RenderPosition.BEFOREEND);
       this.#filterPresenter.init();
+      this.#tripInfoPresenter.init();
     });
   }
 
@@ -63,6 +67,8 @@ export default class AppPresenter {
         this.#filterPresenter.init();
         this.#tripPresenter.destroy();
         this.#tripPresenter.init();
+        this.#tripInfoPresenter.destroy();
+        this.#tripInfoPresenter.init();
         statsTabElement.classList.remove('trip-tabs__btn--active');
         tableTabElement.classList.add('trip-tabs__btn--active');
         tripEventsContainer.classList.remove('trip-events--hidden');
