@@ -66,14 +66,16 @@ export default class NewTripEventPresenter {
     }
   };
 
-  #handleFormSubmit = (newTripEvent) => {
-    this.#changeData(
-      UserAction.ADD_TRIP_EVENT,
-      UpdateType.MAJOR,
-      newTripEvent,
-    );
-    this.destroy();
-  }
+  setSaving = () => this.#tripEventEditorComponent.updateData({
+    isDisabled: true,
+    isSaving: true,
+  });
+
+  #handleFormSubmit = (newTripEvent) => this.#changeData(
+    UserAction.ADD_TRIP_EVENT,
+    UpdateType.MAJOR,
+    newTripEvent,
+  );
 
   #handleFormDelete = () => this.destroy();
 }

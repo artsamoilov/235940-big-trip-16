@@ -7,7 +7,7 @@ import TripEventsListView from '../view/trip-events-list-view.js';
 import TripMessageView from '../view/trip-message-view.js';
 import TripLoadingView from '../view/trip-loading-view.js';
 import TripInfoView from '../view/trip-info-view.js';
-import TripEventPresenter from './trip-event-presenter.js';
+import TripEventPresenter, {State} from './trip-event-presenter.js';
 import NewTripEventPresenter from './new-trip-event-presenter.js';
 
 export default class TripPresenter {
@@ -95,12 +95,15 @@ export default class TripPresenter {
   #handleViewAction = (actionType, updateType, update) => {
     switch (actionType) {
       case UserAction.UPDATE_TRIP_EVENT:
+        this.#tripEventPresenter.get(update.id).setViewState(State.SAVING);
         this.#tripModel.updateTripEvent(updateType, update);
         break;
       case UserAction.ADD_TRIP_EVENT:
+        this.#newTripEventPresenter.setSaving();
         this.#tripModel.addTripEvent(updateType, update);
         break;
       case UserAction.DELETE_TRIP_EVENT:
+        this.#tripEventPresenter.get(update.id).setViewState(State.DELETING);
         this.#tripModel.deleteTripEvent(updateType, update);
         break;
     }
