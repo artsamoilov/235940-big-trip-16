@@ -25,17 +25,20 @@ export default class TripPresenter {
 
   #tripEventPresenter = new Map();
   #newTripEventPresenter = null;
+  #filterPresenter = null;
+
   #currentSortType = SortType.DAY;
   #filterType = FilterType.EVERYTHING;
   #isLoading = true;
 
-  constructor(tripMainContainer, tripEventsContainer, tripModel, filterModel) {
+  constructor(tripMainContainer, tripEventsContainer, tripModel, filterModel, filterPresenter) {
     this.#tripModel = tripModel;
     this.#filterModel = filterModel;
 
     this.#tripMainContainer = tripMainContainer;
     this.#tripEventsContainer = tripEventsContainer;
 
+    this.#filterPresenter = filterPresenter;
     this.#newTripEventPresenter = new NewTripEventPresenter(this.#tripModel, this.#tripEventsListComponent, this.#handleViewAction);
   }
 
@@ -126,6 +129,7 @@ export default class TripPresenter {
       case UpdateType.MAJOR:
         this.#clearTrip(true);
         this.#renderTrip();
+        this.#filterPresenter.init();
         break;
       case UpdateType.MINOR:
         this.#clearTrip();

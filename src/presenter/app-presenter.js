@@ -29,8 +29,8 @@ export default class AppPresenter {
   }
 
   init = () => {
-    this.#tripPresenter = new TripPresenter(tripMainContainer, tripEventsContainer, this.#tripModel, this.#filterModel);
-    this.#filterPresenter = new FilterPresenter(tripFiltersContainer, this.#filterModel);
+    this.#filterPresenter = new FilterPresenter(tripFiltersContainer, this.#tripModel, this.#filterModel);
+    this.#tripPresenter = new TripPresenter(tripMainContainer, tripEventsContainer, this.#tripModel, this.#filterModel, this.#filterPresenter);
 
     newEventButton.addEventListener('click', (evt) => {
       evt.preventDefault();
