@@ -9,8 +9,6 @@ const apiService = new ApiService(END_POINT, AUTHORIZATION);
 const appPresenter = new AppPresenter(apiService);
 appPresenter.init();
 
-// TODO в форме создания/редактирования при отсутствии офферов (Sightseeing) нужно убрать заголовок и контейнер
-
 // TODO скрывать фильтры при переключении на статистику
 
 // TODO убрать возможность вводить текст в поле выбора города? (сейчас кидает ошибку)

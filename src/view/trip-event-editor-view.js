@@ -121,7 +121,7 @@ const createTripEventEditor = (destinations = [], offersList = [], data = {}) =>
         ${getEditorCloseButtons()}
       </header>
       <section class="event__details">
-        ${getOffersList()}
+        ${offersList.find((offer) => offer.type === type).offers.length > 0 ? getOffersList() : ''}
         ${destination.description ? getDestinationDescription() : ''}
       </section>
     </form>
@@ -204,7 +204,10 @@ export default class TripEventEditorView extends SmartView {
   }
 
   #setInnerHandlers = () => {
-    this.element.querySelector('.event__available-offers').addEventListener('change', this.#changeEventOffersHandler);
+    if (this.#offersList.find((offer) => offer.type === this._data.type).offers.length > 0) {
+      this.element.querySelector('.event__available-offers').addEventListener('change', this.#changeEventOffersHandler);
+    }
+
     this.element.querySelector('.event__input--price').addEventListener('change', this.#changeEventPriceHandler);
     this.element.querySelector('.event__type-group').addEventListener('change', this.#changeEventTypeHandler);
     this.element.querySelector('.event__input--destination').addEventListener('change', this.#changeEventCityHandler);
