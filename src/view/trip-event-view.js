@@ -1,18 +1,13 @@
 import dayjs from 'dayjs';
 import he from 'he';
 import AbstractView from './abstract-view.js';
+import {formatTimeDifference} from '../utils/trip-event.js';
 
 const createTripEvent = ({basePrice, dateFrom, dateTo, destination, isFavorite, offers, type}) => {
   const startTime = dayjs(dateFrom);
   const endTime = dayjs(dateTo);
 
-  const getTimeDifference = () => {
-    const timeDifference = endTime.diff(startTime, 'minutes');
-    const minutesDifference = timeDifference % 60 > 0 ? `${timeDifference % 60}M` : '';
-    const hoursDifference = Math.floor(timeDifference / 60) % 24 > 0 ? `${Math.floor(timeDifference / 60) % 24}H ` : '';
-    const daysDifference = Math.floor((timeDifference / 60) / 24) > 0 ? `${Math.floor((timeDifference / 60) / 24)}D ` : '';
-    return daysDifference + hoursDifference + minutesDifference;
-  };
+  const getTimeDifference = () => formatTimeDifference(endTime.diff(startTime, 'minutes'));
 
   const getOffers = () => offers.map(({title, price}) =>
     `<li class="event__offer">
@@ -27,7 +22,7 @@ const createTripEvent = ({basePrice, dateFrom, dateTo, destination, isFavorite, 
     <div class="event">
       <time class="event__date" datetime="${startTime.format('YYYY-MM-DD')}">${startTime.format('MMM DD')}</time>
       <div class="event__type">
-        <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event type icon">
+        <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="${type}">
       </div>
       <h3 class="event__title">${type} ${he.encode(destination.name)}</h3>
       <div class="event__schedule">

@@ -2,10 +2,13 @@ import AbstractView from './abstract-view.js';
 import {MenuItem} from '../utils/const.js';
 
 const createTripTabs = () => (
-  `<nav class="trip-controls__trip-tabs  trip-tabs">
-    <a class="trip-tabs__btn  trip-tabs__btn--active" href="#" data-menu-item="${MenuItem.TABLE}">Table</a>
-    <a class="trip-tabs__btn" href="#" data-menu-item="${MenuItem.STATS}">Stats</a>
-  </nav>`
+  `<div class="trip-controls__navigation">
+    <h2 class="visually-hidden">Switch trip view</h2>
+    <nav class="trip-controls__trip-tabs  trip-tabs">
+      <a class="trip-tabs__btn  trip-tabs__btn--active" href="#" data-menu-item="${MenuItem.TABLE}">Table</a>
+      <a class="trip-tabs__btn" href="#" data-menu-item="${MenuItem.STATS}">Stats</a>
+    </nav>
+  </div>`
 );
 
 export default class TripTabsView extends AbstractView {

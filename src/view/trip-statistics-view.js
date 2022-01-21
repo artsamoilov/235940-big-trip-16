@@ -1,5 +1,5 @@
 import {TripEventType} from '../utils/const.js';
-import {countTripEventsMoney, countTripEventsQuantityByType, countTripEventsTimeByType, formatChartTime} from '../utils/trip-event.js';
+import {countTripEventsMoney, countTripEventsQuantityByType, countTripEventsTimeByType, formatTimeDifference} from '../utils/trip-event.js';
 import SmartView from './smart-view.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -177,7 +177,7 @@ const renderTimeChart = (timeCtx, tripEvents) => {
           color: '#000000',
           anchor: 'end',
           align: 'start',
-          formatter: (val) => `${formatChartTime(val)}`,
+          formatter: (val) => `${formatTimeDifference(val)}`,
         },
       },
       title: {

@@ -17,12 +17,13 @@ const EMPTY_TRIP_EVENT = {
 };
 
 export default class NewTripEventPresenter {
-  #tripEventsListComponent = null;
-  #changeData = null;
-  #tripEventEditorComponent = null;
-  #destroyCallback = null;
-
   #tripModel = null;
+
+  #tripEventsListComponent = null;
+  #tripEventEditorComponent = null;
+
+  #changeData = null;
+  #destroyCallback = null;
 
   constructor(tripModel, tripEventsListComponent, changeData) {
     this.#tripModel = tripModel;
