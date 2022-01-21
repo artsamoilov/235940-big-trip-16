@@ -3,14 +3,14 @@ import {remove, render, replace, RenderPosition} from '../utils/render.js';
 import {FilterType, UpdateType} from '../utils/const.js';
 
 export default class FilterPresenter {
-  #filterContainer = null;
+  #controlsContainer = null;
   #tripModel = null;
   #filterModel = null;
 
   #filterComponent = null;
 
-  constructor(filterContainer, tripModel, filterModel) {
-    this.#filterContainer = filterContainer;
+  constructor(controlsContainer, tripModel, filterModel) {
+    this.#controlsContainer = controlsContainer;
     this.#tripModel = tripModel;
     this.#filterModel = filterModel;
   }
@@ -42,7 +42,7 @@ export default class FilterPresenter {
     this.#filterModel.addObserver(this.#handleModelEvent);
 
     if (existingFilterComponent === null) {
-      render(this.#filterContainer, this.#filterComponent, RenderPosition.BEFOREEND);
+      render(this.#controlsContainer, this.#filterComponent, RenderPosition.BEFOREEND);
       return;
     }
 
@@ -52,10 +52,9 @@ export default class FilterPresenter {
 
   destroy = () => {
     remove(this.#filterComponent);
-    this.#filterComponent = null;
-
-    this.#filterModel.removeObserver(this.#handleModelEvent);
     this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#filterComponent = null;
+    this.#filterModel.removeObserver(this.#handleModelEvent);
   }
 
   #handleModelEvent = () => this.init();

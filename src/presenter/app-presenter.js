@@ -10,8 +10,7 @@ import TripInfoPresenter from './trip-info-presenter.js';
 
 const tripMainContainer = document.querySelector('.trip-main');
 const newEventButton = document.querySelector('.trip-main__event-add-btn');
-const tripTabsContainer = document.querySelector('.trip-controls__navigation');
-const tripFiltersContainer = document.querySelector('.trip-controls__filters');
+const tripControlsContainer = document.querySelector('.trip-controls');
 const tripEventsContainer = document.querySelector('.trip-events');
 
 export default class AppPresenter {
@@ -31,7 +30,7 @@ export default class AppPresenter {
   }
 
   init = () => {
-    this.#filterPresenter = new FilterPresenter(tripFiltersContainer, this.#tripModel, this.#filterModel);
+    this.#filterPresenter = new FilterPresenter(tripControlsContainer, this.#tripModel, this.#filterModel);
     this.#tripInfoPresenter = new TripInfoPresenter(tripMainContainer, this.#tripModel);
     this.#tripPresenter = new TripPresenter(tripMainContainer, tripEventsContainer, this.#tripModel, this.#filterModel, this.#filterPresenter, this.#tripInfoPresenter);
 
@@ -45,7 +44,7 @@ export default class AppPresenter {
     this.#tripPresenter.init();
 
     this.#tripModel.init().finally(() => {
-      render(tripTabsContainer, this.#tripTabsView, RenderPosition.BEFOREEND);
+      render(tripControlsContainer, this.#tripTabsView, RenderPosition.AFTERBEGIN);
       this.#filterPresenter.init();
       this.#tripInfoPresenter.init();
     });
@@ -57,8 +56,8 @@ export default class AppPresenter {
   }
 
   #handleTabsClick = (tabItem) => {
-    const tableTabElement = tripTabsContainer.querySelector(`[data-menu-item="${MenuItem.TABLE}"]`);
-    const statsTabElement = tripTabsContainer.querySelector(`[data-menu-item="${MenuItem.STATS}"]`);
+    const tableTabElement = tripControlsContainer.querySelector(`[data-menu-item="${MenuItem.TABLE}"]`);
+    const statsTabElement = tripControlsContainer.querySelector(`[data-menu-item="${MenuItem.STATS}"]`);
 
     switch (tabItem) {
       case MenuItem.NEW_EVENT:
