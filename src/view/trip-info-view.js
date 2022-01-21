@@ -1,6 +1,11 @@
 import dayjs from 'dayjs';
 import AbstractView from './abstract-view.js';
 
+const InfoDateFormat = {
+  LONG_DATE: 'DD MMM',
+  SHORT_DATE: 'DD',
+};
+
 const createTripInfo = (tripEvents) => {
   const getTotalPrice = () => tripEvents.reduce((totalPrice, tripEvent) =>
     totalPrice + tripEvent.basePrice + tripEvent.offers.reduce((totalOffersPrice, {price}) =>
@@ -33,9 +38,7 @@ const createTripInfo = (tripEvents) => {
   const getTripDuration = () => {
     const startDay = dayjs(getSortedEventsFrom()[0].dateFrom);
     const endDay = dayjs(getSortedEventsTo()[tripEvents.length - 1].dateTo);
-    const longDateFormat = 'MMM DD';
-    const shortDateFormat = 'DD';
-    return `${startDay.format(longDateFormat)}&nbsp;&mdash;&nbsp;${endDay.format((startDay.month() === endDay.month()) ? shortDateFormat : longDateFormat)}`;
+    return `${startDay.format((startDay.month() === endDay.month()) ? InfoDateFormat.SHORT_DATE : InfoDateFormat.LONG_DATE)}&nbsp;&mdash;&nbsp;${endDay.format(InfoDateFormat.LONG_DATE)}`;
   };
 
   return tripEvents.length > 0 ?
