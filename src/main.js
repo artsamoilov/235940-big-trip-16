@@ -9,9 +9,6 @@ const apiService = new ApiService(END_POINT, AUTHORIZATION);
 const appPresenter = new AppPresenter(apiService);
 appPresenter.init();
 
-// TODO в точке маршрута время должно отображаться в формате 01D 00H 00M, 01H 00M или 00M
-// TODO в статистике формат времени должен совпадать с форматом на главной
-
 // TODO в форме создания/редактирования при отсутствии офферов (Sightseeing) нужно убрать заголовок и контейнер
 
 // TODO скрывать фильтры при переключении на статистику

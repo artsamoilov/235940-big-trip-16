@@ -1,18 +1,13 @@
 import dayjs from 'dayjs';
 import he from 'he';
 import AbstractView from './abstract-view.js';
+import {formatTimeDifference} from '../utils/trip-event.js';
 
 const createTripEvent = ({basePrice, dateFrom, dateTo, destination, isFavorite, offers, type}) => {
   const startTime = dayjs(dateFrom);
   const endTime = dayjs(dateTo);
 
-  const getTimeDifference = () => {
-    const timeDifference = endTime.diff(startTime, 'minutes');
-    const minutesDifference = timeDifference % 60 > 0 ? `${timeDifference % 60}M` : '';
-    const hoursDifference = Math.floor(timeDifference / 60) % 24 > 0 ? `${Math.floor(timeDifference / 60) % 24}H ` : '';
-    const daysDifference = Math.floor((timeDifference / 60) / 24) > 0 ? `${Math.floor((timeDifference / 60) / 24)}D ` : '';
-    return daysDifference + hoursDifference + minutesDifference;
-  };
+  const getTimeDifference = () => formatTimeDifference(endTime.diff(startTime, 'minutes'));
 
   const getOffers = () => offers.map(({title, price}) =>
     `<li class="event__offer">

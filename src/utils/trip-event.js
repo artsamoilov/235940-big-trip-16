@@ -1,6 +1,12 @@
 import dayjs from 'dayjs';
 import {TripEventType} from './const.js';
 
+const Time = {
+  HOURS_IN_DAY: 24,
+  MINUTES_IN_HOUR: 60,
+  MINUTES_IN_DAY: 1440,
+};
+
 const isCitiesEqual = (cityA, cityB) => cityA === cityB;
 
 const isTimeEquals = (timeA, timeB) => dayjs(timeA).isSame(dayjs(timeB));
@@ -42,10 +48,10 @@ export const countTripEventsTimeByType = (tripEvents, type) => {
 
 const addPaddingZero = (number) => number < 10 ? `0${number}` : number;
 
-export const formatChartTime = (time) => {
-  const minutesDifference = `${addPaddingZero(time % 60)}M`;
-  const hoursDifference = Math.floor(time / 60) % 24 > 0 ? `${addPaddingZero(Math.floor(time / 60) % 24)}H ` : '';
-  const daysDifference = Math.floor((time / 60) / 24) > 0 ? `${addPaddingZero(Math.floor((time / 60) / 24))}D ` : '';
+export const formatTimeDifference = (time) => {
+  const minutesDifference = `${addPaddingZero(time % Time.MINUTES_IN_HOUR)}M`;
+  const hoursDifference = Math.floor(time / Time.MINUTES_IN_HOUR) > 0 ? `${addPaddingZero(Math.floor(time / Time.MINUTES_IN_HOUR) % Time.HOURS_IN_DAY)}H ` : '';
+  const daysDifference = Math.floor(time / Time.MINUTES_IN_DAY) > 0 ? `${addPaddingZero(Math.floor(time / Time.MINUTES_IN_DAY))}D ` : '';
 
   return daysDifference + hoursDifference + minutesDifference;
 };
