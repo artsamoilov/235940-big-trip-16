@@ -40,6 +40,7 @@ export default class NewTripEventPresenter {
     this.#tripEventEditorComponent = new TripEventEditorView(this.#tripModel.destinations, this.#tripModel.offersList, {...EMPTY_TRIP_EVENT, isEventNew: true});
     this.#tripEventEditorComponent.setSubmitFormHandler(this.#handleFormSubmit);
     this.#tripEventEditorComponent.setDeleteFormHandler(this.#handleFormDelete);
+    this.#tripEventEditorComponent.setDatePickers();
 
     render (this.#tripEventsListComponent, this.#tripEventEditorComponent, RenderPosition.AFTERBEGIN);
 

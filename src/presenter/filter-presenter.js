@@ -4,12 +4,14 @@ import {FilterType, UpdateType} from '../utils/const.js';
 
 export default class FilterPresenter {
   #filterContainer = null;
+  #tripModel = null;
   #filterModel = null;
 
   #filterComponent = null;
 
-  constructor(filterContainer, filterModel) {
+  constructor(filterContainer, tripModel, filterModel) {
     this.#filterContainer = filterContainer;
+    this.#tripModel = tripModel;
     this.#filterModel = filterModel;
   }
 
@@ -34,7 +36,7 @@ export default class FilterPresenter {
     const filters = this.filters;
     const existingFilterComponent = this.#filterComponent;
 
-    this.#filterComponent = new TripFiltersView(filters, this.#filterModel.filter);
+    this.#filterComponent = new TripFiltersView(filters, this.#filterModel.filter, this.#tripModel.tripEvents);
     this.#filterComponent.setFilterTypeChangeHandler(this.#handleFilterTypeChange);
 
     this.#filterModel.addObserver(this.#handleModelEvent);
