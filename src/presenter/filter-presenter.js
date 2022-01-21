@@ -4,6 +4,7 @@ import {FilterType, UpdateType} from '../utils/const.js';
 
 export default class FilterPresenter {
   #controlsContainer = null;
+
   #tripModel = null;
   #filterModel = null;
 

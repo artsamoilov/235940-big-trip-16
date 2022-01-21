@@ -16,14 +16,14 @@ export const State = {
 };
 
 export default class TripEventPresenter {
-  #tripEventsListComponent = null;
-  #changeData = null;
-  #changeMode = null;
-
   #tripModel = null;
 
+  #tripEventsListComponent = null;
   #tripEventComponent = null;
   #tripEventEditorComponent = null;
+
+  #changeData = null;
+  #changeMode = null;
 
   #tripEvent = null;
   #mode = Mode.DEFAULT;

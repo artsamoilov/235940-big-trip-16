@@ -8,6 +8,3 @@ const apiService = new ApiService(END_POINT, AUTHORIZATION);
 
 const appPresenter = new AppPresenter(apiService);
 appPresenter.init();
-
-// TODO убрать возможность вводить текст в поле выбора города? (сейчас кидает ошибку)
-// TODO формат даты в поле исправить на «25/12/2019 16:00» (год целиком ?)

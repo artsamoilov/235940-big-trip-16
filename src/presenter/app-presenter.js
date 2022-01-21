@@ -17,13 +17,12 @@ export default class AppPresenter {
   #tripModel = null;
   #filterModel = new FilterModel();
 
-  #tripTabsView = new TripTabsView();
+  #tripTabsComponent = new TripTabsView();
+  #statisticsComponent = null;
 
   #tripPresenter = null;
   #tripInfoPresenter = null;
   #filterPresenter = null;
-
-  #statisticsComponent = null;
 
   constructor(apiService) {
     this.#tripModel = new TripModel(apiService);
@@ -39,12 +38,12 @@ export default class AppPresenter {
       this.#handleTabsClick(MenuItem.NEW_EVENT);
     });
 
-    this.#tripTabsView.setTabClickHandler(this.#handleTabsClick);
+    this.#tripTabsComponent.setTabClickHandler(this.#handleTabsClick);
 
     this.#tripPresenter.init();
 
     this.#tripModel.init().finally(() => {
-      render(tripControlsContainer, this.#tripTabsView, RenderPosition.AFTERBEGIN);
+      render(tripControlsContainer, this.#tripTabsComponent, RenderPosition.AFTERBEGIN);
       this.#filterPresenter.init();
       this.#tripInfoPresenter.init();
     });
@@ -52,7 +51,7 @@ export default class AppPresenter {
 
   #handleNewEventEditorClose = () => {
     newEventButton.disabled = false;
-    this.#tripTabsView.setMenuItem(MenuItem.TABLE);
+    this.#tripTabsComponent.setMenuItem(MenuItem.TABLE);
   }
 
   #handleTabsClick = (tabItem) => {
