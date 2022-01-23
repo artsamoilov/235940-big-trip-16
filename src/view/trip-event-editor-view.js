@@ -258,6 +258,7 @@ export default class TripEventEditorView extends SmartView {
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
+        minDate: dayjs().toISOString(),
         onChange: this.#startDateChangeHandler,
       }
     );
@@ -269,7 +270,7 @@ export default class TripEventEditorView extends SmartView {
       {
         enableTime: true,
         dateFormat: 'd/m/y H:i',
-        minDate: this._data.dateFrom ? dayjs(this._data.dateFrom).toISOString() : '',
+        minDate: this._data.dateFrom ? dayjs(this._data.dateFrom).toISOString() : dayjs().toISOString(),
         onChange: this.#endDateChangeHandler,
       }
     );
