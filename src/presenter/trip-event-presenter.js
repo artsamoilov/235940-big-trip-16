@@ -1,6 +1,7 @@
 import {render, replace, remove, RenderPosition} from '../utils/render.js';
 import {UpdateType, UserAction} from '../utils/const.js';
 import {isOnlyTypeChanged} from '../utils/trip-event.js';
+import {isEscKey} from '../utils/common.js';
 import TripEventView from '../view/trip-event-view.js';
 import TripEventEditorView from '../view/trip-event-editor-view.js';
 
@@ -126,7 +127,7 @@ export default class TripEventPresenter {
   }
 
   #escKeydownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (isEscKey(evt.key)) {
       evt.preventDefault();
       this.#tripEventEditorComponent.reset(this.#tripEvent);
       this.#switchEditorToEvent();
